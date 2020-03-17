@@ -1,42 +1,101 @@
 import React from "react";
 
 import Disk from "./Disk";
+import { getMeasurements } from "./helpers";
+import { constants } from "./constants";
 
-const COLORS = ["#ffff00", "#93278f", "#7ac943", "#ff7bac", "#f7931e"];
+const { DIV_COLORS, DISK_COLORS } = constants;
 
 class App extends React.Component {
+  state = { col1: [5, 1], col2: [4, 3], col3: [2] };
+
+  getPosition = size => {
+    const { col1, col2, col3 } = this.state;
+    const width = window.innerWidth / 6;
+    const diskWidth = getMeasurements(size)[0];
+    if (col1.includes(size)) {
+      const x = width - diskWidth / 2;
+      const y = this.getY(col1, size);
+      return [x, y];
+    }
+
+    if (col2.includes(size)) {
+      const x = width * 3 - diskWidth / 2;
+      const y = this.getY(col2, size);
+      return [x, y];
+    }
+
+    const x = width * 5 - diskWidth / 2;
+    const y = this.getY(col3, size);
+    return [x, y];
+  };
+
+  getY = (col, size) => {
+    const height = window.innerHeight - 150;
+    const diskHeight = getMeasurements(size)[1];
+    let y = height - diskHeight;
+    let i = 0;
+    while (col[i] !== size) {
+      y -= getMeasurements(col[i])[1];
+      i++;
+    }
+    return y;
+  };
+
   render() {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
+    const width = window.innerWidth / 3;
+    const height = window.innerHeight - 150;
     return (
-      <div style={{ position: "relative", display: "flex" }}>
-        <div
-          style={{
-            width: width / 3,
-            height,
-            background: "rgb(215, 169, 227, 0.4)"
-          }}
-        >
-          <Disk x={50} y={100} size={1} color={COLORS[0]} />
-          <Disk x={0} y={0} size={2} color={COLORS[1]} />
-          <Disk x={100} y={50} size={3} color={COLORS[2]} />
-          <Disk x={50} y={150} size={4} color={COLORS[3]} />
-          <Disk x={150} y={50} size={5} color={COLORS[4]} />
+      <div>
+        <div style={{ position: "relative", display: "flex" }}>
+          <div style={{ width, height, background: DIV_COLORS[0] }} />
+          <div style={{ width, height, background: DIV_COLORS[1] }} />
+          <div style={{ width, height, background: DIV_COLORS[2] }} />
+
+          <Disk
+            xy={this.getPosition(1)}
+            move={this.move}
+            size={1}
+            color={DISK_COLORS[0]}
+            width={width}
+          />
+          <Disk
+            xy={this.getPosition(2)}
+            move={this.move}
+            size={2}
+            color={DISK_COLORS[1]}
+            width={width}
+          />
+          <Disk
+            xy={this.getPosition(3)}
+            move={this.move}
+            size={3}
+            color={DISK_COLORS[2]}
+            width={width}
+          />
+          <Disk
+            xy={this.getPosition(4)}
+            move={this.move}
+            size={4}
+            color={DISK_COLORS[3]}
+            width={width}
+          />
+          <Disk
+            xy={this.getPosition(5)}
+            move={this.move}
+            size={5}
+            color={DISK_COLORS[4]}
+            width={width}
+          />
         </div>
+
         <div
           style={{
-            width: width / 3,
-            height,
-            background: "rgb(139, 190, 232, 0.4)"
+            width: window.innerWidth,
+            height: 150,
+            background: "gainsboro"
           }}
-        ></div>
-        <div
-          style={{
-            width: width / 3,
-            height,
-            background: "rgb(168, 213, 186, 0.4)"
-          }}
-        ></div>
+        />
       </div>
     );
   }
