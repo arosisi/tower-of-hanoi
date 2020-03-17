@@ -1,13 +1,13 @@
 import React from "react";
 
 import Disk from "./Disk";
-import { getLast, getMeasurements } from "./helpers";
+import { getLast, getUpToLast, getMeasurements } from "./helpers";
 import { constants } from "./constants";
 
 const { DIV_COLORS, DISK_COLORS } = constants;
 
 class App extends React.Component {
-  state = { col1: [5, 1], col2: [4, 3, 2], col3: [] };
+  state = { col1: [5, 4, 3, 2, 1], col2: [], col3: [] };
 
   getIsActive = size => {
     const { col1, col2, col3 } = this.state;
@@ -16,8 +16,7 @@ class App extends React.Component {
     );
   };
 
-  getPosition = size => {
-    const { col1, col2, col3 } = this.state;
+  getPosition = (col1, col2, col3, size) => {
     const width = window.innerWidth / 6;
     const diskWidth = getMeasurements(size)[0];
     if (col1.includes(size)) {
@@ -49,7 +48,32 @@ class App extends React.Component {
     return y;
   };
 
+  move = (colNum, size) => {
+    const { col1, col2, col3 } = this.state;
+    // prettier-ignore
+    const fromCol = col1.includes(size) ? col1 : col2.includes(size) ? col2 : col3;
+    const toCol = colNum === 1 ? col1 : colNum === 2 ? col2 : col3;
+
+    if (fromCol === toCol || size > getLast(toCol)) {
+      return this.getPosition(col1, col2, col3, size);
+    }
+
+    const newFromCol = getUpToLast(fromCol);
+    const newToCol = [...toCol, size];
+
+    // prettier-ignore
+    const newCol1 = col1 === fromCol ? newFromCol : col1 === toCol ? newToCol : col1
+    // prettier-ignore
+    const newCol2 = col2 === fromCol ? newFromCol : col2 === toCol ? newToCol : col2
+    // prettier-ignore
+    const newCol3 = col3 === fromCol ? newFromCol : col3 === toCol ? newToCol : col3
+
+    this.setState({ col1: newCol1, col2: newCol2, col3: newCol3 });
+    return this.getPosition(newCol1, newCol2, newCol3, size);
+  };
+
   render() {
+    const { col1, col2, col3 } = this.state;
     const width = window.innerWidth / 3;
     const height = window.innerHeight - 150;
     return (
@@ -61,43 +85,43 @@ class App extends React.Component {
 
           <Disk
             active={this.getIsActive(1)}
-            xy={this.getPosition(1)}
+            xy={this.getPosition(col1, col2, col3, 1)}
             move={this.move}
             size={1}
             color={DISK_COLORS[0]}
-            width={width}
+            divWidth={width}
           />
           <Disk
             active={this.getIsActive(2)}
-            xy={this.getPosition(2)}
+            xy={this.getPosition(col1, col2, col3, 2)}
             move={this.move}
             size={2}
             color={DISK_COLORS[1]}
-            width={width}
+            divWidth={width}
           />
           <Disk
             active={this.getIsActive(3)}
-            xy={this.getPosition(3)}
+            xy={this.getPosition(col1, col2, col3, 3)}
             move={this.move}
             size={3}
             color={DISK_COLORS[2]}
-            width={width}
+            divWidth={width}
           />
           <Disk
             active={this.getIsActive(4)}
-            xy={this.getPosition(4)}
+            xy={this.getPosition(col1, col2, col3, 4)}
             move={this.move}
             size={4}
             color={DISK_COLORS[3]}
-            width={width}
+            divWidth={width}
           />
           <Disk
             active={this.getIsActive(5)}
-            xy={this.getPosition(5)}
+            xy={this.getPosition(col1, col2, col3, 5)}
             move={this.move}
             size={5}
             color={DISK_COLORS[4]}
-            width={width}
+            divWidth={width}
           />
         </div>
 

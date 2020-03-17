@@ -5,7 +5,7 @@ import { useGesture } from "react-use-gesture";
 import { getMeasurements } from "./helpers";
 
 function Disk(props) {
-  const { active, xy, size, color } = props;
+  const { active, xy, move, size, color, divWidth } = props;
   const [width, height] = getMeasurements(size);
 
   // spring to smoothen drag
@@ -20,20 +20,16 @@ function Disk(props) {
     {
       onDrag: ({ event, xy: [x, y], cancel }) => {
         event.preventDefault();
-        // if (x > 500) {
-        //   props.move(x, y);
-        //   setPosition({ x: props.x, y: props.y });
-        //   cancel();
-        // } else {
-        //   setPosition({ x: x - 25, y: y - 25 });
-        // }
         if (active) {
           setPosition({ x: x - width / 2, y: y - height / 2 });
           setZIndex(99);
         }
       },
-      onDragEnd: ({ xy: [x, y] }) => {
-        // if (x )
+      onDragEnd: ({ event, xy: [x, y] }) => {
+        event.preventDefault();
+        const colNum = x <= divWidth ? 1 : x <= 2 * divWidth ? 2 : 3;
+        const moveTo = move(colNum, size);
+        setPosition({ x: moveTo[0], y: moveTo[1] });
         setZIndex(1);
       }
     },
