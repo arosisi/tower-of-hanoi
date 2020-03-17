@@ -25,6 +25,8 @@ function Disk(props) {
 
   React.useEffect(bind, [bind]);
 
+  const { size, color } = props;
+
   return (
     <animated.div
       ref={myRef}
@@ -33,12 +35,17 @@ function Disk(props) {
         position: "absolute",
         x,
         y,
-        width: 50,
-        height: 50,
+        width: 50 * (size * 0.6 + 0.4),
+        height: 10 * (size * 0.6 + 0.4),
         borderRadius: "50%",
-        background: "lightsalmon"
+        background: color,
+        cursor: "grab",
+        display: "flex",
+        justifyContent: "center"
       }}
-    />
+    >
+      <span style={{ alignSelf: "center" }}>{size}</span>
+    </animated.div>
   );
 }
 
