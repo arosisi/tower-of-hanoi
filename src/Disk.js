@@ -5,11 +5,11 @@ import { useGesture } from "react-use-gesture";
 import { getMeasurements } from "./helpers";
 
 function Disk(props) {
+  const { active, xy, size, color } = props;
+  const [width, height] = getMeasurements(size);
+
   // spring to smoothen drag
-  const [{ x, y }, setPosition] = useSpring(() => ({
-    x: props.xy[0],
-    y: props.xy[1]
-  }));
+  const [{ x, y }, setPosition] = useSpring(() => ({ x: xy[0], y: xy[1] }));
 
   // z-index to put moving disk in front
   const [zIndex, setZIndex] = useState(1);
@@ -27,8 +27,10 @@ function Disk(props) {
         // } else {
         //   setPosition({ x: x - 25, y: y - 25 });
         // }
-        setPosition({ x: x - width / 2, y: y - height / 2 });
-        setZIndex(99);
+        if (active) {
+          setPosition({ x: x - width / 2, y: y - height / 2 });
+          setZIndex(99);
+        }
       },
       onDragEnd: ({ xy: [x, y] }) => {
         // if (x )
@@ -43,9 +45,6 @@ function Disk(props) {
 
   React.useEffect(bind, [bind]);
 
-  const { size, color } = props;
-  const [width, height] = getMeasurements(size);
-
   return (
     <animated.div
       ref={myRef}
@@ -59,7 +58,7 @@ function Disk(props) {
         height,
         borderRadius: "20px",
         background: color,
-        cursor: "grab",
+        cursor: active ? "grab" : "default",
         display: "flex",
         justifyContent: "center"
       }}

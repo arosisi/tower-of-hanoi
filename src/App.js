@@ -1,13 +1,20 @@
 import React from "react";
 
 import Disk from "./Disk";
-import { getMeasurements } from "./helpers";
+import { getLast, getMeasurements } from "./helpers";
 import { constants } from "./constants";
 
 const { DIV_COLORS, DISK_COLORS } = constants;
 
 class App extends React.Component {
-  state = { col1: [5, 1], col2: [4, 3], col3: [2] };
+  state = { col1: [5, 1], col2: [4, 3, 2], col3: [] };
+
+  getIsActive = size => {
+    const { col1, col2, col3 } = this.state;
+    return (
+      getLast(col1) === size || getLast(col2) === size || getLast(col3) === size
+    );
+  };
 
   getPosition = size => {
     const { col1, col2, col3 } = this.state;
@@ -53,6 +60,7 @@ class App extends React.Component {
           <div style={{ width, height, background: DIV_COLORS[2] }} />
 
           <Disk
+            active={this.getIsActive(1)}
             xy={this.getPosition(1)}
             move={this.move}
             size={1}
@@ -60,6 +68,7 @@ class App extends React.Component {
             width={width}
           />
           <Disk
+            active={this.getIsActive(2)}
             xy={this.getPosition(2)}
             move={this.move}
             size={2}
@@ -67,6 +76,7 @@ class App extends React.Component {
             width={width}
           />
           <Disk
+            active={this.getIsActive(3)}
             xy={this.getPosition(3)}
             move={this.move}
             size={3}
@@ -74,6 +84,7 @@ class App extends React.Component {
             width={width}
           />
           <Disk
+            active={this.getIsActive(4)}
             xy={this.getPosition(4)}
             move={this.move}
             size={4}
@@ -81,6 +92,7 @@ class App extends React.Component {
             width={width}
           />
           <Disk
+            active={this.getIsActive(5)}
             xy={this.getPosition(5)}
             move={this.move}
             size={5}
