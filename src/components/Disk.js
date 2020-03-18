@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSpring, animated } from "react-spring";
 import { useGesture } from "react-use-gesture";
 
@@ -11,6 +11,11 @@ function Disk(props) {
   // spring to smoothen drag
   const [{ x, y }, setPosition] = useSpring(() => ({ x: xy[0], y: xy[1] }));
 
+  // move disks on screen resize
+  useEffect(() => {
+    setPosition({ x: props.xy[0], y: props.xy[1] });
+  }, [setPosition, props.xy]);
+
   // z-index to put moving disk in front
   const [zIndex, setZIndex] = useState(1);
 
@@ -18,7 +23,7 @@ function Disk(props) {
 
   const bind = useGesture(
     {
-      onDrag: ({ event, xy: [x, y], cancel }) => {
+      onDrag: ({ event, xy: [x, y] }) => {
         event.preventDefault();
         if (active) {
           setPosition({ x: x - width / 2, y: y - height / 2 });

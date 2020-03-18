@@ -37,29 +37,31 @@ class Controller extends React.Component {
   };
 
   getPosition = (col1, col2, col3, size) => {
-    const width = window.innerWidth / 6;
+    const { windowWidth } = this.props;
+    const halfDivWidth = windowWidth / 6;
     const diskWidth = getMeasurements(size)[0];
     if (col1.includes(size)) {
-      const x = width - diskWidth / 2;
+      const x = halfDivWidth - diskWidth / 2;
       const y = this.getY(col1, size);
       return [x, y];
     }
 
     if (col2.includes(size)) {
-      const x = width * 3 - diskWidth / 2;
+      const x = halfDivWidth * 3 - diskWidth / 2;
       const y = this.getY(col2, size);
       return [x, y];
     }
 
-    const x = width * 5 - diskWidth / 2;
+    const x = halfDivWidth * 5 - diskWidth / 2;
     const y = this.getY(col3, size);
     return [x, y];
   };
 
   getY = (col, size) => {
-    const height = window.innerHeight - 150;
+    const { windowHeight } = this.props;
+    const divHeight = windowHeight - 150;
     const diskHeight = getMeasurements(size)[1];
-    let y = height - diskHeight;
+    let y = divHeight - diskHeight;
     let i = 0;
     while (col[i] !== size) {
       y -= getMeasurements(col[i])[1];
@@ -98,8 +100,9 @@ class Controller extends React.Component {
   };
 
   render() {
-    const { numDisks, divWidth, restart } = this.props;
+    const { numDisks, windowWidth, restart } = this.props;
     const { gameOver, col1, col2, col3 } = this.state;
+    const divWidth = windowWidth / 3;
     return (
       <div>
         <div
