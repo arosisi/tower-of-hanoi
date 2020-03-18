@@ -2,7 +2,6 @@ import React from "react";
 
 import Controller from "./components/Controller";
 import Initializer from "./components/Initializer";
-import {} from "./helpers";
 import { constants } from "./constants";
 
 const { DIV_COLORS } = constants;
@@ -16,7 +15,9 @@ class App extends React.Component {
     const height = window.innerHeight - 150;
     return (
       <div>
-        <div style={{ position: "relative", display: "flex" }}>
+        <div
+          style={{ position: "relative", display: "flex", userSelect: "none" }}
+        >
           <div style={{ width, height, background: DIV_COLORS[0] }} />
           <div style={{ width, height, background: DIV_COLORS[1] }} />
           <div style={{ width, height, background: DIV_COLORS[2] }} />

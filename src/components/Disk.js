@@ -27,10 +27,12 @@ function Disk(props) {
       },
       onDragEnd: ({ event, xy: [x, y] }) => {
         event.preventDefault();
-        const colNum = x <= divWidth ? 1 : x <= 2 * divWidth ? 2 : 3;
-        const moveTo = move(colNum, size);
-        setPosition({ x: moveTo[0], y: moveTo[1] });
-        setZIndex(1);
+        if (active) {
+          const colNum = x <= divWidth ? 1 : x <= 2 * divWidth ? 2 : 3;
+          const moveTo = move(colNum, size);
+          setPosition({ x: moveTo[0], y: moveTo[1] });
+          setZIndex(1);
+        }
       }
     },
     {

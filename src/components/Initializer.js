@@ -13,8 +13,8 @@ class Initializer extends React.Component {
   handleSubmit = event => {
     event.preventDefault();
     const data = new FormData(event.target);
-    const numDisks = data.get("numDisks");
-    if (get1ToN(maxNumDisks).includes(parseInt(numDisks))) {
+    const numDisks = parseInt(data.get("numDisks"));
+    if (get1ToN(maxNumDisks).includes(numDisks)) {
       this.props.setNumDisks(numDisks);
     } else {
       this.setState({ error: true });

@@ -2,22 +2,37 @@ import React from "react";
 import Button from "@material-ui/core/Button";
 
 import Disk from "./Disk";
-import { get1ToN, getLast, getUpToLast, getMeasurements } from "../helpers";
+import GameOver from "./GameOver";
+import {
+  get1ToN,
+  getLast,
+  getUpToSecondLast,
+  getMeasurements
+} from "../helpers";
 import { constants } from "../constants";
 
 const { DISK_COLORS } = constants;
 
 class Controller extends React.Component {
   state = {
+    gameOver: false,
     col1: get1ToN(this.props.numDisks).reverse(),
     col2: [],
     col3: []
   };
 
+  isGameOver = (col2, col3) => {
+    const { numDisks } = this.props;
+    return col2.length === numDisks || col3.length === numDisks;
+  };
+
   getIsActive = size => {
-    const { col1, col2, col3 } = this.state;
+    const { gameOver, col1, col2, col3 } = this.state;
     return (
-      getLast(col1) === size || getLast(col2) === size || getLast(col3) === size
+      !gameOver &&
+      (getLast(col1) === size ||
+        getLast(col2) === size ||
+        getLast(col3) === size)
     );
   };
 
@@ -63,7 +78,7 @@ class Controller extends React.Component {
       return this.getPosition(col1, col2, col3, size);
     }
 
-    const newFromCol = getUpToLast(fromCol);
+    const newFromCol = getUpToSecondLast(fromCol);
     const newToCol = [...toCol, size];
 
     // prettier-ignore
@@ -73,13 +88,18 @@ class Controller extends React.Component {
     // prettier-ignore
     const newCol3 = col3 === fromCol ? newFromCol : col3 === toCol ? newToCol : col3
 
-    this.setState({ col1: newCol1, col2: newCol2, col3: newCol3 });
+    this.setState({
+      gameOver: this.isGameOver(newCol2, newCol3),
+      col1: newCol1,
+      col2: newCol2,
+      col3: newCol3
+    });
     return this.getPosition(newCol1, newCol2, newCol3, size);
   };
 
   render() {
     const { numDisks, divWidth, restart } = this.props;
-    const { col1, col2, col3 } = this.state;
+    const { gameOver, col1, col2, col3 } = this.state;
     return (
       <div>
         <div
@@ -94,6 +114,19 @@ class Controller extends React.Component {
             Restart
           </Button>
         </div>
+
+        {gameOver && (
+          <div
+            style={{
+              position: "absolute",
+              top: 80,
+              left: 0,
+              right: 0
+            }}
+          >
+            <GameOver />
+          </div>
+        )}
 
         {get1ToN(numDisks).map(size => (
           <Disk
