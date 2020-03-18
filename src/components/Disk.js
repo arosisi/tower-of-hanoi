@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useSpring, animated } from "react-spring";
 import { useGesture } from "react-use-gesture";
 
-import { getMeasurements } from "./helpers";
+import { getMeasurements } from "../helpers";
 
 function Disk(props) {
   const { active, xy, move, size, color, divWidth } = props;

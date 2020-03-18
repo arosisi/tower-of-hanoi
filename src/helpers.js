@@ -1,5 +1,13 @@
 import { constants } from "./constants";
 
+export const get1ToN = n => {
+  const result = [];
+  for (let i = 1; i <= n; i++) {
+    result.push(i);
+  }
+  return result;
+};
+
 export const getLast = array => array[array.length - 1];
 
 export const getUpToLast = array => array.slice(0, array.length - 1);
