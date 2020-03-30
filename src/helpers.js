@@ -18,12 +18,12 @@ export const getMeasurements = size => {
   return [Math.ceil(BASE_WIDTH * multiplier), BASE_HEIGHT];
 };
 
-export const solve = (numDisks, initCol1, initCol2, initCol3, move) => {
+export const solve = (numDisks, initCol1, initCol2, initCol3) => {
   let col1 = [...initCol1];
   let col2 = [...initCol2];
   let col3 = [...initCol3];
 
-  const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+  let steps = "";
 
   const moveDisk = (fromCol, toCol, size) => {
     if (fromCol === col1) {
@@ -76,23 +76,15 @@ export const solve = (numDisks, initCol1, initCol2, initCol3, move) => {
         ? col2
         : col3;
 
-    await moveDisks(size - 1, otherCol);
+    moveDisks(size - 1, otherCol);
 
-    await sleep(500);
-
-    if (toCol === col1) {
-      move(1, size);
-    } else if (toCol === col2) {
-      move(2, size);
-    } else {
-      move(3, size);
-    }
     moveDisk(fromCol, toCol, size);
+    steps += `${JSON.stringify({ col1, col2, col3 })},`;
 
-    await sleep(500);
-
-    await moveDisks(size - 1, toCol);
+    moveDisks(size - 1, toCol);
   };
 
   moveDisks(numDisks, col2);
+
+  return `[${steps.slice(0, -1)}]`;
 };

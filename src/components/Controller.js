@@ -18,8 +18,18 @@ class Controller extends React.Component {
   state = {
     col1: get1ToN(this.props.numDisks).reverse(),
     col2: [],
-    col3: []
+    col3: [],
+    solving: false,
+    handler: null,
+    step: 0
   };
+
+  componentWillUnmount() {
+    const { handler } = this.state;
+    if (handler) {
+      clearInterval(handler);
+    }
+  }
 
   isGameOver = () => {
     const { numDisks } = this.props;
@@ -28,8 +38,9 @@ class Controller extends React.Component {
   };
 
   getIsActive = size => {
-    const { col1, col2, col3 } = this.state;
+    const { col1, col2, col3, solving } = this.state;
     return (
+      !solving &&
       !this.isGameOver() &&
       (getLast(col1) === size ||
         getLast(col2) === size ||
@@ -102,12 +113,28 @@ class Controller extends React.Component {
   solve = () => {
     const { numDisks } = this.props;
     const { col1, col2, col3 } = this.state;
-    solve(numDisks, [...col1], [...col2], [...col3], this.move);
+    const steps = JSON.parse(solve(numDisks, [...col1], [...col2], [...col3]));
+    this.setState({ solving: true, steps, step: 0 }, () => {
+      const handler = setInterval(() => {
+        const { steps, step } = this.state;
+        if (step < steps.length) {
+          this.setState({ ...steps[step], step: step + 1 });
+        } else {
+          clearInterval(handler);
+        }
+      }, 1000);
+      this.setState({ handler });
+    });
+  };
+
+  stop = () => {
+    const { handler } = this.state;
+    this.setState({ solving: false }, () => clearInterval(handler));
   };
 
   render() {
     const { numDisks, windowWidth, windowHeight, restart } = this.props;
-    const { col1, col2, col3 } = this.state;
+    const { col1, col2, col3, solving } = this.state;
     const divWidth = windowWidth / 3;
     return (
       <div>
@@ -121,9 +148,24 @@ class Controller extends React.Component {
             justifyContent: "center"
           }}
         >
-          <Button color='primary' onClick={this.solve}>
-            Solve
-          </Button>
+          {!solving && (
+            <Button
+              color='primary'
+              disabled={this.isGameOver()}
+              onClick={this.solve}
+            >
+              Solve
+            </Button>
+          )}
+          {solving && (
+            <Button
+              color='primary'
+              disabled={this.isGameOver()}
+              onClick={this.stop}
+            >
+              Stop
+            </Button>
+          )}
           <Button color='secondary' onClick={restart}>
             Restart
           </Button>
