@@ -21,29 +21,5 @@ export const constants = {
     "#ef4224",
     "#f36522",
     "#f89f1a"
-  ],
-  GAME_OVER_MSGS: [
-    // World's top 20 languages, referenced from
-    // https://www.mentalfloss.com/article/67766/worlds-top-20-languages-and-words-english-has-borrowed-them
-    "游戏结束!", // Chinese
-    "¡Juego terminado!", // Spanish
-    "Game over!",
-    "खेल खत्म!", // Hindi
-    "انتهت اللعبة!", // Arabic
-    "Fim de jogo!", // Portuguese
-    "খেলা শেষ!", // Bangla
-    "Игра закончена!", // Russian
-    "ゲームオーバー！", // Japanese
-    "ਖੇਲ ਖਤਮ!", // Punjabi
-    "Game liwat!", // Javanese
-    "Spiel ist aus!", // German
-    "게임 끝!", // Korean
-    "Jeu terminé!", // French
-    "ఆట సమాప్తం!", // Telugu
-    "खेळ संपला!", // Marathi
-    "Oyun bitti!", // Turkish
-    "விளையாட்டு முடிவு அடைந்தது!", // Tamil
-    "Trò chơi kết thúc!", // Vietnamese
-    "کھیل ختم!" // Urdu
   ]
 };

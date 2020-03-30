@@ -11,7 +11,7 @@ function Disk(props) {
   // spring to smoothen drag
   const [{ x, y }, setPosition] = useSpring(() => ({ x: xy[0], y: xy[1] }));
 
-  // move disks on screen resize
+  // move disks via props.xy
   useEffect(() => {
     setPosition({ x: props.xy[0], y: props.xy[1] });
   }, [setPosition, props.xy]);
