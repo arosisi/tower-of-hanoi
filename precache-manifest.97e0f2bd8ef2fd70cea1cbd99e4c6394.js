@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "45d5d6e4f43de31b7150ea66dea8cb3d",
+    "revision": "014643641b19a815897cde2d6dab0816",
     "url": "/tower-of-hanoi/index.html"
   },
   {
