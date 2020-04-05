@@ -8,15 +8,26 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import moment from "moment";
+import { withStyles } from "@material-ui/core/styles";
+
+import { formatTime } from "../helpers";
+
+const styles = {
+  root: {
+    textAlign: "center"
+  },
+  content: {
+    marginBottom: 20
+  }
+};
 
 class Leaderboard extends React.Component {
   render() {
-    const { open, fetching, highScores, onClose } = this.props;
+    const { classes, open, fetching, highScores, onClose } = this.props;
     return (
-      <Dialog open={open} onClose={onClose}>
+      <Dialog className={classes.root} open={open} onClose={onClose}>
         <DialogTitle>Leaderboard</DialogTitle>
-        <DialogContent>
+        <DialogContent className={classes.content}>
           {fetching ? (
             <CircularProgress />
           ) : highScores.length ? (
@@ -31,19 +42,13 @@ class Leaderboard extends React.Component {
               <TableBody>
                 {highScores.map(highScore => {
                   const { time } = highScore;
-                  const duration = moment.duration(time, "seconds");
                   return (
                     <TableRow key={highScore.NumDisks}>
                       <TableCell component='th' scope='row'>
                         {highScore.NumDisks}
                       </TableCell>
                       <TableCell align='right'>{highScore.name}</TableCell>
-                      <TableCell align='right'>
-                        {Math.floor(duration.asHours()) +
-                          moment
-                            .utc(duration.asMilliseconds())
-                            .format(":mm:ss")}
-                      </TableCell>
+                      <TableCell align='right'>{formatTime(time)}</TableCell>
                     </TableRow>
                   );
                 })}
@@ -58,4 +63,4 @@ class Leaderboard extends React.Component {
   }
 }
 
-export default Leaderboard;
+export default withStyles(styles)(Leaderboard);

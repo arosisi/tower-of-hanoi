@@ -5,6 +5,7 @@ import { withStyles } from "@material-ui/core/styles";
 
 import Disk from "./Disk";
 import Leaderboard from "./Leaderboard";
+import Timer from "./Timer";
 import {
   get1ToN,
   getLast,
@@ -31,6 +32,12 @@ const styles = {
     top: 70,
     left: 0,
     right: 0
+  },
+  timer: {
+    position: "absolute",
+    top: 110,
+    left: 0,
+    right: 0
   }
 };
 
@@ -44,7 +51,10 @@ class Controller extends React.Component {
     step: 0,
     showLeaderboard: false,
     fetching: false,
-    highScores: []
+    highScores: [],
+    isTiming: false,
+    time: null,
+    hasUsedSolve: false
   };
 
   componentWillUnmount() {
@@ -106,6 +116,11 @@ class Controller extends React.Component {
   };
 
   move = (colNum, size) => {
+    const { hasUsedSolve } = this.state;
+    if (!hasUsedSolve) {
+      this.setState({ isTiming: true });
+    }
+
     const { col1, col2, col3 } = this.state;
     // prettier-ignore
     const fromCol = col1.includes(size) ? col1 : col2.includes(size) ? col2 : col3;
@@ -134,6 +149,8 @@ class Controller extends React.Component {
   };
 
   solve = () => {
+    this.setState({ isTiming: false, hasUsedSolve: true });
+
     const { numDisks } = this.props;
     const { col1, col2, col3 } = this.state;
     const steps = JSON.parse(solve(numDisks, [...col1], [...col2], [...col3]));
@@ -212,27 +229,22 @@ class Controller extends React.Component {
       solving,
       showLeaderboard,
       fetching,
-      highScores
+      highScores,
+      isTiming,
+      hasUsedSolve
     } = this.state;
     const divWidth = windowWidth / 3;
+    const isGameOver = this.isGameOver();
     return (
       <div>
         <div className={classes.controlButtons}>
           {!solving && (
-            <Button
-              color='primary'
-              disabled={this.isGameOver()}
-              onClick={this.solve}
-            >
+            <Button color='primary' disabled={isGameOver} onClick={this.solve}>
               Solve
             </Button>
           )}
           {solving && (
-            <Button
-              color='primary'
-              disabled={this.isGameOver()}
-              onClick={this.stop}
-            >
+            <Button color='primary' disabled={isGameOver} onClick={this.stop}>
               Stop
             </Button>
           )}
@@ -245,6 +257,10 @@ class Controller extends React.Component {
           <Button onClick={this.showLeaderboard}>Leaderboard</Button>
         </div>
 
+        <div className={classes.timer}>
+          <Timer running={isTiming && !isGameOver} disabled={hasUsedSolve} />
+        </div>
+
         <Leaderboard
           open={showLeaderboard}
           fetching={fetching}
@@ -252,9 +268,7 @@ class Controller extends React.Component {
           onClose={() => this.setState({ showLeaderboard: false })}
         />
 
-        {this.isGameOver() && (
-          <Confetti width={windowWidth} height={windowHeight} />
-        )}
+        {isGameOver && <Confetti width={windowWidth} height={windowHeight} />}
 
         {get1ToN(numDisks).map(size => (
           <Disk

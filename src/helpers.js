@@ -1,4 +1,14 @@
+import moment from "moment";
+
 import { constants } from "./constants";
+
+export const formatTime = seconds => {
+  const duration = moment.duration(seconds, "seconds");
+  return (
+    Math.floor(duration.asHours()) +
+    moment.utc(duration.asMilliseconds()).format(":mm:ss")
+  );
+};
 
 export const get1ToN = n => {
   const result = [];
