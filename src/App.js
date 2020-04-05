@@ -1,10 +1,25 @@
 import React from "react";
+import { withStyles } from "@material-ui/core/styles";
 
 import Controller from "./components/Controller";
 import Initializer from "./components/Initializer";
 import { constants } from "./constants";
 
 const { DIV_COLORS } = constants;
+
+const styles = {
+  overground: {
+    position: "relative",
+    display: "flex",
+    userSelect: "none"
+  },
+  game: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    textAlign: "center"
+  }
+};
 
 class App extends React.Component {
   state = {
@@ -24,14 +39,13 @@ class App extends React.Component {
   }
 
   render() {
+    const { classes } = this.props;
     const { windowWidth, windowHeight, initializing, numDisks } = this.state;
     const divWidth = windowWidth / 3;
     const divHeight = windowHeight - 150;
     return (
       <div>
-        <div
-          style={{ position: "relative", display: "flex", userSelect: "none" }}
-        >
+        <div className={classes.overground}>
           <div
             style={{
               width: divWidth,
@@ -54,14 +68,7 @@ class App extends React.Component {
             }}
           />
 
-          <div
-            style={{
-              position: "absolute",
-              left: 0,
-              right: 0,
-              textAlign: "center"
-            }}
-          >
+          <div className={classes.game}>
             {initializing ? (
               <Initializer
                 setNumDisks={numDisks =>
@@ -91,4 +98,4 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default withStyles(styles)(App);

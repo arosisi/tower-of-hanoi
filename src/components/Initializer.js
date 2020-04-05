@@ -1,11 +1,18 @@
 import React from "react";
 import TextField from "@material-ui/core/TextField";
+import { withStyles } from "@material-ui/core/styles";
 
 import { get1ToN } from "../helpers";
 import { constants } from "../constants";
 
 const { DISK_COLORS } = constants;
 const maxNumDisks = DISK_COLORS.length;
+
+const styles = {
+  root: {
+    marginTop: 30
+  }
+};
 
 class Initializer extends React.Component {
   state = { error: false };
@@ -22,9 +29,10 @@ class Initializer extends React.Component {
   };
 
   render() {
+    const { classes } = this.props;
     const { error } = this.state;
     return (
-      <div style={{ marginTop: 30 }}>
+      <div className={classes.root}>
         <form onSubmit={this.handleSubmit} noValidate autoComplete='off'>
           <TextField
             name='numDisks'
@@ -39,4 +47,4 @@ class Initializer extends React.Component {
   }
 }
 
-export default Initializer;
+export default withStyles(styles)(Initializer);

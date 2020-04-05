@@ -1,8 +1,10 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
 import Confetti from "react-confetti";
+import { withStyles } from "@material-ui/core/styles";
 
 import Disk from "./Disk";
+import Leaderboard from "./Leaderboard";
 import {
   get1ToN,
   getLast,
@@ -11,8 +13,26 @@ import {
   solve
 } from "../helpers";
 import { constants } from "../constants";
+import privateInfo from "../privateInfo";
 
 const { DISK_COLORS } = constants;
+
+const styles = {
+  controlButtons: {
+    position: "absolute",
+    top: 30,
+    left: 0,
+    right: 0,
+    display: "flex",
+    justifyContent: "center"
+  },
+  leaderboardButton: {
+    position: "absolute",
+    top: 70,
+    left: 0,
+    right: 0
+  }
+};
 
 class Controller extends React.Component {
   state = {
@@ -21,7 +41,10 @@ class Controller extends React.Component {
     col3: [],
     solving: false,
     handler: null,
-    step: 0
+    step: 0,
+    showLeaderboard: false,
+    fetching: false,
+    highScores: []
   };
 
   componentWillUnmount() {
@@ -132,22 +155,69 @@ class Controller extends React.Component {
     this.setState({ solving: false }, () => clearInterval(handler));
   };
 
+  showLeaderboard = () => {
+    const { solving, handler } = this.state;
+    if (solving) {
+      this.setState(
+        { solving: false, showLeaderboard: true, fetching: true },
+        () => {
+          this.fetchHighScores();
+          clearInterval(handler);
+        }
+      );
+    } else {
+      this.setState(
+        { showLeaderboard: true, fetching: true },
+        this.fetchHighScores
+      );
+    }
+  };
+
+  fetchHighScores = () => {
+    fetch(privateInfo.api_endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "get-high-scores" })
+    })
+      .then(response => response.json())
+      .then(response => {
+        if (response.success) {
+          this.setState({
+            fetching: false,
+            highScores: response.highScores.sort(
+              ({ NumDisks: NumDisks1 }, { NumDisks: NumDisks2 }) =>
+                NumDisks1 - NumDisks2
+            )
+          });
+        } else {
+          this.setState({ fetching: false });
+          console.log(response.message);
+        }
+      })
+      .catch(error => console.log("Unable to connect to API.", error));
+  };
+
   render() {
-    const { numDisks, windowWidth, windowHeight, restart } = this.props;
-    const { col1, col2, col3, solving } = this.state;
+    const {
+      classes,
+      numDisks,
+      windowWidth,
+      windowHeight,
+      restart
+    } = this.props;
+    const {
+      col1,
+      col2,
+      col3,
+      solving,
+      showLeaderboard,
+      fetching,
+      highScores
+    } = this.state;
     const divWidth = windowWidth / 3;
     return (
       <div>
-        <div
-          style={{
-            position: "absolute",
-            top: 30,
-            left: 0,
-            right: 0,
-            display: "flex",
-            justifyContent: "center"
-          }}
-        >
+        <div className={classes.controlButtons}>
           {!solving && (
             <Button
               color='primary'
@@ -171,6 +241,17 @@ class Controller extends React.Component {
           </Button>
         </div>
 
+        <div className={classes.leaderboardButton}>
+          <Button onClick={this.showLeaderboard}>Leaderboard</Button>
+        </div>
+
+        <Leaderboard
+          open={showLeaderboard}
+          fetching={fetching}
+          highScores={highScores}
+          onClose={() => this.setState({ showLeaderboard: false })}
+        />
+
         {this.isGameOver() && (
           <Confetti width={windowWidth} height={windowHeight} />
         )}
@@ -191,4 +272,4 @@ class Controller extends React.Component {
   }
 }
 
-export default Controller;
+export default withStyles(styles)(Controller);
