@@ -11,6 +11,7 @@ import TableRow from "@material-ui/core/TableRow";
 import { withStyles } from "@material-ui/core/styles";
 
 import { formatTime } from "../helpers";
+import privateInfo from "../privateInfo";
 
 const styles = {
   root: {
@@ -18,14 +19,44 @@ const styles = {
   },
   content: {
     marginBottom: 20
+  },
+  error: {
+    color: "#f44336"
   }
 };
 
 class Leaderboard extends React.Component {
+  state = { fetching: true, highScores: [], showError: false };
+
+  componentDidMount() {
+    fetch(privateInfo.api_endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "get-high-scores" })
+    })
+      .then(response => response.json())
+      .then(response => {
+        if (response.success) {
+          this.setState({
+            fetching: false,
+            highScores: response.highScores.sort(
+              ({ NumDisks: NumDisks1 }, { NumDisks: NumDisks2 }) =>
+                NumDisks1 - NumDisks2
+            )
+          });
+        } else {
+          this.setState({ fetching: false, showError: true });
+          console.log(response.message);
+        }
+      })
+      .catch(error => console.log("Unable to connect to API.", error));
+  }
+
   render() {
-    const { classes, open, fetching, highScores, onClose } = this.props;
+    const { classes, onClose } = this.props;
+    const { fetching, highScores, showError } = this.state;
     return (
-      <Dialog className={classes.root} open={open} onClose={onClose}>
+      <Dialog className={classes.root} open={true} onClose={onClose}>
         <DialogTitle>Leaderboard</DialogTitle>
         <DialogContent className={classes.content}>
           {fetching ? (
@@ -55,7 +86,13 @@ class Leaderboard extends React.Component {
               </TableBody>
             </Table>
           ) : (
-            "There are no high scores for now."
+            !showError && "There are no high scores for now."
+          )}
+
+          {showError && (
+            <div className={classes.error}>
+              Something went wrong. Try again later.
+            </div>
           )}
         </DialogContent>
       </Dialog>

@@ -16,7 +16,6 @@ import {
   solve
 } from "../helpers";
 import { constants } from "../constants";
-import privateInfo from "../privateInfo";
 
 const { DISK_COLORS } = constants;
 
@@ -56,8 +55,6 @@ class Controller extends React.Component {
     handler: null,
     step: 0,
     showLeaderboard: false,
-    fetching: false,
-    highScores: [],
     isTiming: false,
     time: null,
     hasUsedSolve: false,
@@ -184,43 +181,12 @@ class Controller extends React.Component {
   showLeaderboard = () => {
     const { solving, handler } = this.state;
     if (solving) {
-      this.setState(
-        { solving: false, showLeaderboard: true, fetching: true },
-        () => {
-          this.fetchHighScores();
-          clearInterval(handler);
-        }
+      this.setState({ solving: false, showLeaderboard: true }, () =>
+        clearInterval(handler)
       );
     } else {
-      this.setState(
-        { showLeaderboard: true, fetching: true },
-        this.fetchHighScores
-      );
+      this.setState({ showLeaderboard: true });
     }
-  };
-
-  fetchHighScores = () => {
-    fetch(privateInfo.api_endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "get-high-scores" })
-    })
-      .then(response => response.json())
-      .then(response => {
-        if (response.success) {
-          this.setState({
-            fetching: false,
-            highScores: response.highScores.sort(
-              ({ NumDisks: NumDisks1 }, { NumDisks: NumDisks2 }) =>
-                NumDisks1 - NumDisks2
-            )
-          });
-        } else {
-          this.setState({ fetching: false });
-          console.log(response.message);
-        }
-      })
-      .catch(error => console.log("Unable to connect to API.", error));
   };
 
   render() {
@@ -237,8 +203,6 @@ class Controller extends React.Component {
       col3,
       solving,
       showLeaderboard,
-      fetching,
-      highScores,
       isTiming,
       time,
       hasUsedSolve,
@@ -278,12 +242,11 @@ class Controller extends React.Component {
           />
         </div>
 
-        <Leaderboard
-          open={showLeaderboard}
-          fetching={fetching}
-          highScores={highScores}
-          onClose={() => this.setState({ showLeaderboard: false })}
-        />
+        {showLeaderboard && (
+          <Leaderboard
+            onClose={() => this.setState({ showLeaderboard: false })}
+          />
+        )}
 
         {showGameOver && isGameOver && !hasUsedSolve && !hasSubmitted && (
           <GameOver
