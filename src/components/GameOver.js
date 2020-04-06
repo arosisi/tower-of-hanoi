@@ -20,11 +20,19 @@ const styles = {
   },
   submit: {
     marginTop: 10
+  },
+  error: {
+    color: "#f44336"
   }
 };
 
 class GameOver extends React.Component {
-  state = { fetching: true, highScore: null };
+  state = {
+    fetching: true,
+    highScore: null,
+    submitting: false,
+    showError: false
+  };
 
   componentDidMount() {
     const { numDisks } = this.props;
@@ -63,7 +71,10 @@ class GameOver extends React.Component {
               helperText='Enter your name to display on the leaderboard'
               autoFocus={true}
               value={values.name}
-              onChange={handleChange}
+              onChange={event => {
+                this.setState({ showError: false });
+                handleChange(event);
+              }}
             />
             <Button
               className={classes.submit}
@@ -80,52 +91,93 @@ class GameOver extends React.Component {
   };
 
   handleSubmit = ({ name }) => {
-    console.log(name);
-    // TODO
-    // should be able to submit only once
+    const { numDisks, time, onSubmit } = this.props;
+    this.setState({ submitting: true }, () => {
+      fetch(privateInfo.api_endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "update-high-scores",
+          NumDisks: numDisks,
+          name,
+          time
+        })
+      })
+        .then(response => response.json())
+        .then(response => {
+          if (response.success) {
+            this.setState({
+              submitting: false
+            });
+            onSubmit();
+          } else {
+            this.setState({ submitting: false, showError: true });
+            console.log(response.message);
+          }
+        })
+        .catch(error => console.log("Unable to connect to API.", error));
+    });
   };
 
   render() {
     const { classes, numDisks, time, onClose } = this.props;
-    const { fetching, highScore } = this.state;
+    const { fetching, highScore, submitting, showError } = this.state;
     return (
-      <Dialog className={classes.root} open={true} onClose={onClose}>
-        <DialogTitle>Your time is {formatTime(time)}!</DialogTitle>
-        <DialogContent className={classes.content}>
-          {fetching ? (
-            <CircularProgress />
-          ) : highScore ? (
-            time < highScore.time ? (
-              <div>
+      <div>
+        <Dialog className={classes.root} open={true} onClose={onClose}>
+          <DialogTitle>Your time is {formatTime(time)}!</DialogTitle>
+          <DialogContent className={classes.content}>
+            {fetching ? (
+              <CircularProgress />
+            ) : highScore ? (
+              time < highScore.time ? (
                 <div>
-                  You beat the current high score of{" "}
-                  <strong>{highScore.name}</strong> of{" "}
-                  <strong>{formatTime(highScore.time)}</strong> for {numDisks}{" "}
-                  disk(s).
+                  <div>
+                    You beat the current high score of{" "}
+                    <strong>{highScore.name}</strong> of{" "}
+                    <strong>{formatTime(highScore.time)}</strong> for {numDisks}{" "}
+                    disk(s).
+                  </div>
+                  <br />
+                  {submitting ? (
+                    <CircularProgress />
+                  ) : (
+                    this.renderTimeSubmitForm()
+                  )}
                 </div>
-                <br />
-                {this.renderTimeSubmitForm()}
-              </div>
+              ) : (
+                <div>
+                  <div>
+                    You haven't beaten the current high score of{" "}
+                    <strong>{highScore.name}</strong> of{" "}
+                    <strong>{formatTime(highScore.time)}</strong> for {numDisks}{" "}
+                    disk(s).
+                  </div>
+                  <p>Try again!</p>
+                </div>
+              )
             ) : (
               <div>
                 <div>
-                  You haven't beaten the current high score of{" "}
-                  <strong>{highScore.name}</strong> of{" "}
-                  <strong>{formatTime(highScore.time)}</strong> for {numDisks}{" "}
-                  disk(s).
+                  There is no high score for now for {numDisks} disk(s).
                 </div>
-                <p>Try again!</p>
+                <br />
+                {submitting ? (
+                  <CircularProgress />
+                ) : (
+                  this.renderTimeSubmitForm()
+                )}
               </div>
-            )
-          ) : (
-            <div>
-              <div>There is no high score for now for {numDisks} disk(s).</div>
-              <br />
-              {this.renderTimeSubmitForm()}
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
+            )}
+
+            {showError && (
+              <p className={classes.error}>
+                Something went wrong. Try again later.
+              </p>
+            )}
+          </DialogContent>
+        </Dialog>
+      </div>
     );
   }
 }

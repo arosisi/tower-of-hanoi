@@ -1,6 +1,7 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
 import Confetti from "react-confetti";
+import Snackbar from "@material-ui/core/Snackbar";
 import { withStyles } from "@material-ui/core/styles";
 
 import Disk from "./Disk";
@@ -39,6 +40,10 @@ const styles = {
     top: 110,
     left: 0,
     right: 0
+  },
+  success: {
+    width: "fit-content",
+    margin: "auto"
   }
 };
 
@@ -56,7 +61,9 @@ class Controller extends React.Component {
     isTiming: false,
     time: null,
     hasUsedSolve: false,
-    showGameOver: false
+    showGameOver: false,
+    hasSubmitted: false,
+    showSubmissionSuccess: false
   };
 
   componentWillUnmount() {
@@ -235,7 +242,9 @@ class Controller extends React.Component {
       isTiming,
       time,
       hasUsedSolve,
-      showGameOver
+      showGameOver,
+      hasSubmitted,
+      showSubmissionSuccess
     } = this.state;
     const divWidth = windowWidth / 3;
     const isGameOver = this.isGameOver();
@@ -276,11 +285,23 @@ class Controller extends React.Component {
           onClose={() => this.setState({ showLeaderboard: false })}
         />
 
-        {showGameOver && isGameOver && !hasUsedSolve && (
+        {showGameOver && isGameOver && !hasUsedSolve && !hasSubmitted && (
           <GameOver
             numDisks={numDisks}
             time={time}
             onClose={() => this.setState({ showGameOver: false })}
+            onSubmit={() =>
+              this.setState({ hasSubmitted: true, showSubmissionSuccess: true })
+            }
+          />
+        )}
+
+        {showSubmissionSuccess && (
+          <Snackbar
+            className={classes.success}
+            open={true}
+            message='High score submitted!'
+            onClose={() => this.setState({ showSubmissionSuccess: false })}
           />
         )}
 
