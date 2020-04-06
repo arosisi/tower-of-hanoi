@@ -4,6 +4,7 @@ import Confetti from "react-confetti";
 import { withStyles } from "@material-ui/core/styles";
 
 import Disk from "./Disk";
+import GameOver from "./GameOver";
 import Leaderboard from "./Leaderboard";
 import Timer from "./Timer";
 import {
@@ -54,7 +55,8 @@ class Controller extends React.Component {
     highScores: [],
     isTiming: false,
     time: null,
-    hasUsedSolve: false
+    hasUsedSolve: false,
+    showGameOver: false
   };
 
   componentWillUnmount() {
@@ -231,7 +233,9 @@ class Controller extends React.Component {
       fetching,
       highScores,
       isTiming,
-      hasUsedSolve
+      time,
+      hasUsedSolve,
+      showGameOver
     } = this.state;
     const divWidth = windowWidth / 3;
     const isGameOver = this.isGameOver();
@@ -258,7 +262,11 @@ class Controller extends React.Component {
         </div>
 
         <div className={classes.timer}>
-          <Timer running={isTiming && !isGameOver} disabled={hasUsedSolve} />
+          <Timer
+            running={isTiming && !isGameOver}
+            disabled={hasUsedSolve}
+            recordTime={time => this.setState({ time, showGameOver: true })}
+          />
         </div>
 
         <Leaderboard
@@ -267,6 +275,14 @@ class Controller extends React.Component {
           highScores={highScores}
           onClose={() => this.setState({ showLeaderboard: false })}
         />
+
+        {showGameOver && isGameOver && !hasUsedSolve && (
+          <GameOver
+            numDisks={numDisks}
+            time={time}
+            onClose={() => this.setState({ showGameOver: false })}
+          />
+        )}
 
         {isGameOver && <Confetti width={windowWidth} height={windowHeight} />}
 

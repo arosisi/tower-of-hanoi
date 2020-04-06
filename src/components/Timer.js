@@ -4,6 +4,11 @@ import { withStyles } from "@material-ui/core/styles";
 import { formatTime } from "../helpers";
 
 const styles = {
+  time: {
+    width: "fit-content",
+    margin: "auto",
+    cursor: "pointer"
+  },
   warning: {
     marginTop: 10
   }
@@ -24,6 +29,10 @@ class Timer extends React.Component {
     if (prevProps.running && !this.props.running) {
       const { handler } = this.state;
       clearInterval(handler);
+
+      if (!prevProps.disabled && !this.props.disabled) {
+        this.props.recordTime(this.state.seconds);
+      }
     }
   }
 
@@ -33,11 +42,13 @@ class Timer extends React.Component {
   }
 
   render() {
-    const { classes, disabled } = this.props;
+    const { classes, disabled, recordTime } = this.props;
     const { seconds } = this.state;
     return (
       <div style={{ color: disabled ? "#f44336" : "inherit" }}>
-        {formatTime(seconds)}
+        <div className={classes.time} onClick={() => recordTime(seconds)}>
+          {formatTime(seconds)}
+        </div>
         {disabled && (
           <div className={classes.warning}>Time is now invalid!</div>
         )}
