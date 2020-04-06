@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "4c7814b5d6563fdc9d30d596fd0fb96c",
+    "revision": "4fb6063a085aebab078455570bd6946f",
     "url": "/tower-of-hanoi/index.html"
   },
   {
-    "revision": "d47d3e39d1afd99810e2",
+    "revision": "ca3ce19d3de0bf8f18f2",
     "url": "/tower-of-hanoi/static/css/main.5ecd60fb.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/tower-of-hanoi/static/js/2.b21a3e25.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "d47d3e39d1afd99810e2",
-    "url": "/tower-of-hanoi/static/js/main.966fd91c.chunk.js"
+    "revision": "ca3ce19d3de0bf8f18f2",
+    "url": "/tower-of-hanoi/static/js/main.79206e3a.chunk.js"
   },
   {
     "revision": "161932064034a209f319",
