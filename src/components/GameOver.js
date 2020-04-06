@@ -18,6 +18,10 @@ const styles = {
   content: {
     marginBottom: 20
   },
+  form: {
+    display: "flex",
+    flexDirection: "column"
+  },
   submit: {
     marginTop: 10
   },
@@ -64,7 +68,7 @@ class GameOver extends React.Component {
     return (
       <Formik onSubmit={this.handleSubmit} initialValues={{ name: "" }}>
         {({ handleSubmit, handleChange, values }) => (
-          <form onSubmit={handleSubmit}>
+          <form className={classes.form} onSubmit={handleSubmit}>
             <TextField
               name='name'
               label='Name'
