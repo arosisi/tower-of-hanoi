@@ -1,4 +1,5 @@
 import React from "react";
+import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { withStyles } from "@material-ui/core/styles";
 
@@ -11,6 +12,9 @@ const maxNumDisks = DISK_COLORS.length;
 const styles = {
   root: {
     marginTop: 30
+  },
+  submit: {
+    marginTop: 10
   }
 };
 
@@ -41,6 +45,10 @@ class Initializer extends React.Component {
             autoFocus={true}
             error={error}
           />
+          <br />
+          <Button className={classes.submit} color='primary' type='submit'>
+            Go
+          </Button>
         </form>
       </div>
     );

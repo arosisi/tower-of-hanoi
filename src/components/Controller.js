@@ -4,6 +4,7 @@ import Confetti from "react-confetti";
 import Snackbar from "@material-ui/core/Snackbar";
 import { withStyles } from "@material-ui/core/styles";
 
+import Actions from "./actions/Actions";
 import Disk from "./Disk";
 import GameOver from "./GameOver";
 import Leaderboard from "./Leaderboard";
@@ -178,14 +179,12 @@ class Controller extends React.Component {
     this.setState({ solving: false }, () => clearInterval(handler));
   };
 
-  showLeaderboard = () => {
+  show = state => {
     const { solving, handler } = this.state;
-    if (solving) {
-      this.setState({ solving: false, showLeaderboard: true }, () =>
-        clearInterval(handler)
-      );
+    if (solving && !this.isGameOver()) {
+      this.setState({ solving: false, ...state }, () => clearInterval(handler));
     } else {
-      this.setState({ showLeaderboard: true });
+      this.setState({ ...state });
     }
   };
 
@@ -214,6 +213,8 @@ class Controller extends React.Component {
     const isGameOver = this.isGameOver();
     return (
       <div>
+        <Actions show={this.show} />
+
         <div className={classes.controlButtons}>
           {!solving && (
             <Button color='primary' disabled={isGameOver} onClick={this.solve}>
@@ -231,7 +232,9 @@ class Controller extends React.Component {
         </div>
 
         <div className={classes.leaderboardButton}>
-          <Button onClick={this.showLeaderboard}>Leaderboard</Button>
+          <Button onClick={() => this.show({ showLeaderboard: true })}>
+            Leaderboard
+          </Button>
         </div>
 
         <div className={classes.timer}>
