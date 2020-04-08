@@ -23,7 +23,7 @@ class Actions extends React.Component {
   state = { open: false, showInfo: false, showReportBug: false };
 
   render() {
-    const { classes, show } = this.props;
+    const { classes, windowWidth, show } = this.props;
     const { open, showInfo, showReportBug } = this.state;
     return (
       <div>
@@ -72,7 +72,10 @@ class Actions extends React.Component {
           <Info onClose={() => this.setState({ showInfo: false })} />
         )}
         {showReportBug && (
-          <ReportBug onClose={() => this.setState({ showReportBug: false })} />
+          <ReportBug
+            windowWidth={windowWidth}
+            onClose={() => this.setState({ showReportBug: false })}
+          />
         )}
       </div>
     );

@@ -4,9 +4,12 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import ReCAPTCHA from "react-google-recaptcha";
 import TextField from "@material-ui/core/TextField";
 import { Formik } from "formik";
 import { withStyles } from "@material-ui/core/styles";
+
+import privateInfo from "../../privateInfo";
 
 const styles = {
   content: {
@@ -14,7 +17,8 @@ const styles = {
     textAlign: "center"
   },
   description: {
-    width: "30ch"
+    minWidth: "25ch",
+    marginBottom: 10
   },
   submit: {
     marginTop: 10
@@ -30,6 +34,7 @@ const styles = {
 
 class ReportBug extends React.Component {
   state = {
+    verified: false,
     submitting: false,
     status: ""
   };
@@ -58,10 +63,10 @@ class ReportBug extends React.Component {
   };
 
   render() {
-    const { classes, onClose } = this.props;
-    const { submitting, status } = this.state;
+    const { classes, windowWidth, onClose } = this.props;
+    const { verified, submitting, status } = this.state;
     return (
-      <Dialog open={true} onClose={onClose}>
+      <Dialog className={classes.root} open={true} onClose={onClose}>
         <DialogTitle>Report a bug</DialogTitle>
         <DialogContent className={classes.content}>
           <Formik
@@ -76,11 +81,12 @@ class ReportBug extends React.Component {
                 noValidate
                 autoComplete='off'
                 onSubmit={handleSubmit}
-                action='https://formspree.io/mbjaozdw'
+                action={privateInfo.form_endpoint}
                 method='POST'
               >
                 <TextField
                   className={classes.description}
+                  fullWidth
                   multiline
                   rowsMax={6}
                   name='description'
@@ -95,6 +101,18 @@ class ReportBug extends React.Component {
                   disabled={status === "SUCCESS"}
                 />
 
+                <ReCAPTCHA
+                  size={windowWidth < 416 ? "compact" : "normal"}
+                  style={{
+                    ...(status === "SUCCESS"
+                      ? { opacity: 0.65, pointerEvents: "none" }
+                      : null)
+                  }}
+                  sitekey={privateInfo.captcha_sitekey}
+                  onChange={() => this.setState({ verified: true })}
+                  onExpired={() => this.setState({ verified: false })}
+                />
+
                 <div className={classes.submit}>
                   {status === "SUCCESS" ? (
                     <p className={classes.submitted}>Submitted!</p>
@@ -104,7 +122,7 @@ class ReportBug extends React.Component {
                     <Button
                       color='primary'
                       type='submit'
-                      disabled={!values.description}
+                      disabled={!values.description || !verified}
                     >
                       Submit
                     </Button>

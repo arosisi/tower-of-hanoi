@@ -213,7 +213,7 @@ class Controller extends React.Component {
     const isGameOver = this.isGameOver();
     return (
       <div>
-        <Actions show={this.show} />
+        <Actions windowWidth={windowWidth} show={this.show} />
 
         <div className={classes.controlButtons}>
           {!solving && (
