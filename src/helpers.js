@@ -2,11 +2,11 @@ import moment from "moment";
 
 import { constants } from "./constants";
 
-export const formatTime = seconds => {
-  const duration = moment.duration(seconds, "seconds");
+export const formatTime = millisecs => {
+  const duration = moment.duration(millisecs);
   return (
     Math.floor(duration.asHours()) +
-    moment.utc(duration.asMilliseconds()).format(":mm:ss")
+    moment.utc(duration.asMilliseconds()).format(":mm:ss:SSS")
   );
 };
 

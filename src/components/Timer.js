@@ -15,14 +15,14 @@ const styles = {
 };
 
 class Timer extends React.Component {
-  state = { handler: null, seconds: 0 };
+  state = { handler: null, millisecs: 0 };
 
   componentDidUpdate(prevProps) {
     if (!prevProps.running && this.props.running) {
       const handler = setInterval(() => {
-        const { seconds } = this.state;
-        this.setState({ seconds: seconds + 1 });
-      }, 1000);
+        const { millisecs } = this.state;
+        this.setState({ millisecs: millisecs + 1 });
+      }, 1);
       this.setState({ handler });
     }
 
@@ -31,7 +31,7 @@ class Timer extends React.Component {
       clearInterval(handler);
 
       if (!prevProps.disabled && !this.props.disabled) {
-        this.props.recordTime(this.state.seconds);
+        this.props.recordTime(this.state.millisecs);
       }
     }
   }
@@ -43,11 +43,11 @@ class Timer extends React.Component {
 
   render() {
     const { classes, disabled, recordTime } = this.props;
-    const { seconds } = this.state;
+    const { millisecs } = this.state;
     return (
       <div style={{ color: disabled ? "#f44336" : "inherit" }}>
-        <div className={classes.time} onClick={() => recordTime(seconds)}>
-          {formatTime(seconds)}
+        <div className={classes.time} onClick={() => recordTime(millisecs)}>
+          {formatTime(millisecs)}
         </div>
         {disabled && (
           <div className={classes.warning}>Time is now invalid!</div>

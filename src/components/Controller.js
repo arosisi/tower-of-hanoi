@@ -52,6 +52,7 @@ class Controller extends React.Component {
     col1: get1ToN(this.props.numDisks).reverse(),
     col2: [],
     col3: [],
+    movingDisk: null,
     solving: false,
     handler: null,
     step: 0,
@@ -73,13 +74,16 @@ class Controller extends React.Component {
 
   isGameOver = () => {
     const { numDisks } = this.props;
-    const { col2, col3 } = this.state;
-    return col2.length === numDisks || col3.length === numDisks;
+    const { col2, col3, movingDisk } = this.state;
+    return (
+      !movingDisk && (col2.length === numDisks || col3.length === numDisks)
+    );
   };
 
   getIsActive = size => {
-    const { col1, col2, col3, solving } = this.state;
+    const { col1, col2, col3, movingDisk, solving } = this.state;
     return (
+      (!movingDisk || movingDisk === size) &&
       !solving &&
       !this.isGameOver() &&
       (getLast(col1) === size ||
@@ -88,8 +92,9 @@ class Controller extends React.Component {
     );
   };
 
-  getPosition = (col1, col2, col3, size) => {
+  getPosition = size => {
     const { windowWidth } = this.props;
+    const { col1, col2, col3 } = this.state;
     const halfDivWidth = windowWidth / 6;
     const diskWidth = getMeasurements(size)[0];
     if (col1.includes(size)) {
@@ -123,18 +128,13 @@ class Controller extends React.Component {
   };
 
   move = (colNum, size) => {
-    const { hasUsedSolve } = this.state;
-    if (!hasUsedSolve) {
-      this.setState({ isTiming: true });
-    }
-
     const { col1, col2, col3 } = this.state;
     // prettier-ignore
     const fromCol = col1.includes(size) ? col1 : col2.includes(size) ? col2 : col3;
     const toCol = colNum === 1 ? col1 : colNum === 2 ? col2 : col3;
 
     if (fromCol === toCol || size > getLast(toCol)) {
-      return this.getPosition(col1, col2, col3, size);
+      return;
     }
 
     const newFromCol = getUpToSecondLast(fromCol);
@@ -152,7 +152,6 @@ class Controller extends React.Component {
       col2: newCol2,
       col3: newCol3
     });
-    return this.getPosition(newCol1, newCol2, newCol3, size);
   };
 
   solve = () => {
@@ -197,9 +196,6 @@ class Controller extends React.Component {
       restart
     } = this.props;
     const {
-      col1,
-      col2,
-      col3,
       solving,
       showLeaderboard,
       isTiming,
@@ -277,11 +273,20 @@ class Controller extends React.Component {
           <Disk
             key={size}
             active={this.getIsActive(size)}
-            xy={this.getPosition(col1, col2, col3, size)}
+            xy={this.getPosition(size)}
+            startMove={() => this.setState({ movingDisk: size })}
             move={this.move}
+            endMove={() => this.setState({ movingDisk: null })}
             size={size}
             color={DISK_COLORS[size - 1]}
             divWidth={divWidth}
+            isTiming={isTiming}
+            startTimer={() => {
+              const { hasUsedSolve } = this.state;
+              if (!hasUsedSolve) {
+                this.setState({ isTiming: true });
+              }
+            }}
           />
         ))}
       </div>

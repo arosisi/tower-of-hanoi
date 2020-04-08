@@ -5,38 +5,73 @@ import { useGesture } from "react-use-gesture";
 import { getMeasurements } from "../helpers";
 
 function Disk(props) {
-  const { active, xy, move, size, color, divWidth } = props;
+  const {
+    active,
+    xy,
+    startMove,
+    move,
+    endMove,
+    size,
+    color,
+    divWidth,
+    isTiming,
+    startTimer
+  } = props;
   const [width, height] = getMeasurements(size);
 
+  // is the disk being dragged
+  const [dragging, setDragging] = useState(false);
+
+  // z-index to put moving disk in front
+  const [zIndex, setZIndex] = useState(1);
+
   // spring to smoothen drag
-  const [{ x, y }, setPosition] = useSpring(() => ({ x: xy[0], y: xy[1] }));
+  const [{ x, y }, setPosition] = useSpring(
+    () => ({
+      x: xy[0],
+      y: xy[1],
+      onRest() {
+        if (!dragging) endMove();
+      }
+    }),
+    [dragging, endMove]
+  );
 
   // move disks via props.xy
   useEffect(() => {
     setPosition({ x: props.xy[0], y: props.xy[1] });
   }, [setPosition, props.xy]);
 
-  // z-index to put moving disk in front
-  const [zIndex, setZIndex] = useState(1);
-
   const myRef = React.useRef(null);
 
   const bind = useGesture(
     {
+      onDragStart: ({ event }) => {
+        event.preventDefault();
+        if (active) {
+          startMove();
+          setDragging(true);
+          if (!isTiming) {
+            startTimer();
+          }
+        }
+      },
       onDrag: ({ event, xy: [x, y] }) => {
         event.preventDefault();
         if (active) {
           setPosition({ x: x - width / 2, y: y - height / 2 });
-          setZIndex(99);
+          if (zIndex !== 99) {
+            setZIndex(99);
+          }
         }
       },
       onDragEnd: ({ event, xy: [x, y] }) => {
         event.preventDefault();
         if (active) {
           const colNum = x <= divWidth ? 1 : x <= 2 * divWidth ? 2 : 3;
-          const moveTo = move(colNum, size);
-          setPosition({ x: moveTo[0], y: moveTo[1] });
+          setDragging(false);
           setZIndex(1);
+          move(colNum, size);
         }
       }
     },
