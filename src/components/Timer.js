@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment";
 import { withStyles } from "@material-ui/core/styles";
 
 import { formatTime } from "../helpers";
@@ -15,14 +16,16 @@ const styles = {
 };
 
 class Timer extends React.Component {
-  state = { handler: null, millisecs: 0 };
+  state = { handler: null, start: null, millisecs: 0 };
 
   componentDidUpdate(prevProps) {
     if (!prevProps.running && this.props.running) {
       const handler = setInterval(() => {
-        const { millisecs } = this.state;
-        this.setState({ millisecs: millisecs + 1 });
-      }, 1);
+        const now = moment();
+        const start = this.state.start || now;
+        const millisecs = now.diff(start);
+        this.setState({ start, millisecs });
+      }, 10);
       this.setState({ handler });
     }
 
