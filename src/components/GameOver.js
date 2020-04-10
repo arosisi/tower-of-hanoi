@@ -118,7 +118,6 @@ class GameOver extends React.Component {
       )
         .then(response => response.json())
         .then(response => {
-          console.log(response);
           if (response._id) {
             this.setState({
               submitting: false
