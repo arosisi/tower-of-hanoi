@@ -30,23 +30,25 @@ class Leaderboard extends React.Component {
 
   componentDidMount() {
     fetch(privateInfo.api_endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "get-high-scores" })
+      headers: {
+        "content-type": "application/json",
+        "x-apikey": privateInfo.api_key,
+        "cache-control": "no-cache"
+      }
     })
       .then(response => response.json())
       .then(response => {
-        if (response.success) {
+        if (Array.isArray(response)) {
           this.setState({
             fetching: false,
-            highScores: response.highScores.sort(
-              ({ NumDisks: NumDisks1 }, { NumDisks: NumDisks2 }) =>
-                NumDisks1 - NumDisks2
+            highScores: response.sort(
+              ({ numDisks: numDisks1 }, { numDisks: numDisks2 }) =>
+                numDisks1 - numDisks2
             )
           });
         } else {
           this.setState({ fetching: false, showError: true });
-          console.log(response.message);
+          console.log("Failed to fetch.");
         }
       })
       .catch(error => console.log("Unable to connect to API.", error));
@@ -74,9 +76,9 @@ class Leaderboard extends React.Component {
                 {highScores.map(highScore => {
                   const { time } = highScore;
                   return (
-                    <TableRow key={highScore.NumDisks}>
+                    <TableRow key={highScore.numDisks}>
                       <TableCell component='th' scope='row'>
-                        {highScore.NumDisks}
+                        {highScore.numDisks}
                       </TableCell>
                       <TableCell align='right'>{highScore.name}</TableCell>
                       <TableCell align='right'>{formatTime(time)}</TableCell>

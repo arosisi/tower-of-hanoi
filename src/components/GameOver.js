@@ -41,15 +41,17 @@ class GameOver extends React.Component {
   componentDidMount() {
     const { numDisks } = this.props;
     fetch(privateInfo.api_endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "get-high-scores" })
+      headers: {
+        "content-type": "application/json",
+        "x-apikey": privateInfo.api_key,
+        "cache-control": "no-cache"
+      }
     })
       .then(response => response.json())
       .then(response => {
-        if (response.success) {
-          const highScores = response.highScores.filter(
-            highScore => highScore.NumDisks === numDisks
+        if (Array.isArray(response)) {
+          const highScores = response.filter(
+            highScore => highScore.numDisks === numDisks
           );
           this.setState({
             fetching: false,
@@ -57,7 +59,7 @@ class GameOver extends React.Component {
           });
         } else {
           this.setState({ fetching: false });
-          console.log(response.message);
+          console.log("Failed to fetch.");
         }
       })
       .catch(error => console.log("Unable to connect to API.", error));
@@ -96,27 +98,35 @@ class GameOver extends React.Component {
 
   handleSubmit = ({ name }) => {
     const { numDisks, time, onSubmit } = this.props;
+    const { highScore } = this.state;
     this.setState({ submitting: true }, () => {
-      fetch(privateInfo.api_endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "update-high-scores",
-          NumDisks: numDisks,
-          name,
-          time
-        })
-      })
+      fetch(
+        `${privateInfo.api_endpoint}${highScore ? `/${highScore._id}` : ""}`,
+        {
+          method: highScore ? "PUT" : "POST",
+          headers: {
+            "content-type": "application/json",
+            "x-apikey": privateInfo.api_key,
+            "cache-control": "no-cache"
+          },
+          body: JSON.stringify({
+            numDisks: numDisks,
+            name,
+            time
+          })
+        }
+      )
         .then(response => response.json())
         .then(response => {
-          if (response.success) {
+          console.log(response);
+          if (response._id) {
             this.setState({
               submitting: false
             });
             onSubmit();
           } else {
             this.setState({ submitting: false, showError: true });
-            console.log(response.message);
+            console.log("Failed to update.");
           }
         })
         .catch(error => console.log("Unable to connect to API.", error));
