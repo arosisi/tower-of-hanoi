@@ -13,6 +13,8 @@ function Disk(props) {
     endMove,
     size,
     color,
+    windowWidth,
+    windowHeight,
     divWidth,
     isTiming,
     startTimer
@@ -59,7 +61,14 @@ function Disk(props) {
       onDrag: ({ event, xy: [x, y] }) => {
         event.preventDefault();
         if (active) {
-          setPosition({ x: x - width / 2, y: y - height / 2 });
+          const effectiveX =
+            x > windowWidth - width / 2 ? windowWidth - width / 2 : x;
+          const effectiveY =
+            y > windowHeight - height ? windowHeight - height : y;
+          setPosition({
+            x: effectiveX - width / 2,
+            y: effectiveY - height / 2
+          });
           if (zIndex !== 99) {
             setZIndex(99);
           }

@@ -279,6 +279,8 @@ class Controller extends React.Component {
             endMove={() => this.setState({ movingDisk: null })}
             size={size}
             color={DISK_COLORS[size - 1]}
+            windowWidth={windowWidth}
+            windowHeight={windowHeight}
             divWidth={divWidth}
             isTiming={isTiming}
             startTimer={() => {

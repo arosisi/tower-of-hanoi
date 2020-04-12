@@ -30,6 +30,18 @@ class App extends React.Component {
   };
 
   componentDidMount() {
+    if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+      window.addEventListener(
+        "touchmove",
+        event => {
+          if (event.scale > 1) {
+            event.preventDefault();
+          }
+        },
+        { passive: false }
+      );
+    }
+
     window.addEventListener("resize", ({ target }) =>
       this.setState({
         windowWidth: target.innerWidth,
