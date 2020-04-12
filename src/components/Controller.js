@@ -52,6 +52,7 @@ class Controller extends React.Component {
     col1: get1ToN(this.props.numDisks).reverse(),
     col2: [],
     col3: [],
+    dragging: false,
     movingDisk: null,
     solving: false,
     handler: null,
@@ -81,9 +82,9 @@ class Controller extends React.Component {
   };
 
   getIsActive = size => {
-    const { col1, col2, col3, movingDisk, solving } = this.state;
+    const { col1, col2, col3, dragging, movingDisk, solving } = this.state;
     return (
-      (!movingDisk || movingDisk === size) &&
+      (!dragging || !movingDisk || movingDisk === size) &&
       !solving &&
       !this.isGameOver() &&
       (getLast(col1) === size ||
@@ -274,7 +275,10 @@ class Controller extends React.Component {
             key={size}
             active={this.getIsActive(size)}
             xy={this.getPosition(size)}
-            startMove={() => this.setState({ movingDisk: size })}
+            startMove={() =>
+              this.setState({ dragging: true, movingDisk: size })
+            }
+            endDrag={() => this.setState({ dragging: false })}
             move={this.move}
             endMove={() => this.setState({ movingDisk: null })}
             size={size}

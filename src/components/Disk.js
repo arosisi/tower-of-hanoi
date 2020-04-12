@@ -9,6 +9,7 @@ function Disk(props) {
     active,
     xy,
     startMove,
+    endDrag,
     move,
     endMove,
     size,
@@ -78,6 +79,7 @@ function Disk(props) {
         event.preventDefault();
         if (active) {
           const colNum = x <= divWidth ? 1 : x <= 2 * divWidth ? 2 : 3;
+          endDrag();
           setDragging(false);
           setZIndex(1);
           move(colNum, size);
