@@ -8,6 +8,7 @@ import Actions from "./actions/Actions";
 import Disk from "./Disk";
 import GameOver from "./GameOver";
 import Leaderboard from "./Leaderboard";
+import Likes from "./Likes";
 import Timer from "./Timer";
 import {
   get1ToN,
@@ -213,6 +214,8 @@ class Controller extends React.Component {
     return (
       <div>
         <Actions windowWidth={windowWidth} show={this.show} />
+
+        <Likes />
 
         <div className={classes.controlButtons}>
           {!solving && (

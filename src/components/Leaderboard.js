@@ -41,10 +41,10 @@ class Leaderboard extends React.Component {
   state = { fetching: true, highScores: [], showError: false };
 
   componentDidMount() {
-    fetch(privateInfo.api_endpoint, {
+    fetch(privateInfo.high_score_api_endpoint, {
       headers: {
         "content-type": "application/json",
-        "x-apikey": privateInfo.api_key,
+        "x-apikey": privateInfo.high_score_api_key,
         "cache-control": "no-cache"
       }
     })

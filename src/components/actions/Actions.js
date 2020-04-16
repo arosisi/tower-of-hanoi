@@ -1,6 +1,5 @@
 import React from "react";
 import BugReportIcon from "@material-ui/icons/BugReportOutlined";
-import FavoriteIcon from "@material-ui/icons/FavoriteBorder";
 import InfoIcon from "@material-ui/icons/InfoOutlined";
 import ShareIcon from "@material-ui/icons/Share";
 import SpeedDial from "@material-ui/lab/SpeedDial";
@@ -36,12 +35,6 @@ class Actions extends React.Component {
           open={open}
           direction='down'
         >
-          <SpeedDialAction
-            icon={<FavoriteIcon />}
-            tooltipTitle={"Like"}
-            tooltipPlacement='right'
-            onClick={() => this.setState({ open: false })}
-          />
           <SpeedDialAction
             icon={<ShareIcon />}
             tooltipTitle={"Share"}

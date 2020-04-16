@@ -41,10 +41,10 @@ class GameOver extends React.Component {
 
   componentDidMount() {
     const { numDisks } = this.props;
-    fetch(privateInfo.api_endpoint, {
+    fetch(privateInfo.high_score_api_endpoint, {
       headers: {
         "content-type": "application/json",
-        "x-apikey": privateInfo.api_key,
+        "x-apikey": privateInfo.high_score_api_key,
         "cache-control": "no-cache"
       }
     })
@@ -131,11 +131,11 @@ class GameOver extends React.Component {
   handleSubmit = ({ name }) => {
     const { numDisks, time, timeStamp, onSubmit } = this.props;
     this.setState({ submitting: true }, () => {
-      fetch(privateInfo.api_endpoint, {
+      fetch(privateInfo.high_score_api_endpoint, {
         method: "POST",
         headers: {
           "content-type": "application/json",
-          "x-apikey": privateInfo.api_key,
+          "x-apikey": privateInfo.high_score_api_key,
           "cache-control": "no-cache"
         },
         body: JSON.stringify({
