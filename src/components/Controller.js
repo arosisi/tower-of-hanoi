@@ -60,6 +60,7 @@ class Controller extends React.Component {
     showLeaderboard: false,
     isTiming: false,
     time: null,
+    timeStamp: null,
     hasUsedSolve: false,
     showGameOver: false,
     hasSubmitted: false,
@@ -201,6 +202,7 @@ class Controller extends React.Component {
       showLeaderboard,
       isTiming,
       time,
+      timeStamp,
       hasUsedSolve,
       showGameOver,
       hasSubmitted,
@@ -238,7 +240,9 @@ class Controller extends React.Component {
           <Timer
             running={isTiming && !isGameOver}
             disabled={hasUsedSolve}
-            recordTime={time => this.setState({ time, showGameOver: true })}
+            recordTime={(time, timeStamp) =>
+              this.setState({ time, timeStamp, showGameOver: true })
+            }
           />
         </div>
 
@@ -252,6 +256,7 @@ class Controller extends React.Component {
           <GameOver
             numDisks={numDisks}
             time={time}
+            timeStamp={timeStamp}
             onClose={() => this.setState({ showGameOver: false })}
             onSubmit={() =>
               this.setState({ hasSubmitted: true, showSubmissionSuccess: true })

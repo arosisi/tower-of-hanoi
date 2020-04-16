@@ -16,7 +16,7 @@ const styles = {
 };
 
 class Timer extends React.Component {
-  state = { handler: null, start: null, millisecs: 0 };
+  state = { handler: null, start: null, millisecs: 0, timeStamp: null };
 
   componentDidUpdate(prevProps) {
     if (!prevProps.running && this.props.running) {
@@ -33,8 +33,12 @@ class Timer extends React.Component {
       const { handler } = this.state;
       clearInterval(handler);
 
+      const timeStamp = moment();
+
+      this.setState({ timeStamp });
+
       if (!prevProps.disabled && !this.props.disabled) {
-        this.props.recordTime(this.state.millisecs);
+        this.props.recordTime(this.state.millisecs, timeStamp);
       }
     }
   }
@@ -46,10 +50,13 @@ class Timer extends React.Component {
 
   render() {
     const { classes, disabled, recordTime } = this.props;
-    const { millisecs } = this.state;
+    const { millisecs, timeStamp } = this.state;
     return (
       <div style={{ color: disabled ? "#f44336" : "inherit" }}>
-        <div className={classes.time} onClick={() => recordTime(millisecs)}>
+        <div
+          className={classes.time}
+          onClick={() => recordTime(millisecs, timeStamp)}
+        >
           {formatTime(millisecs)}
         </div>
         {disabled && (

@@ -5,13 +5,18 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
+import TableContainer from "@material-ui/core/TableContainer";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import moment from "moment";
 import { withStyles } from "@material-ui/core/styles";
 
-import { formatTime } from "../helpers";
+import { get1ToN, take, formatTime } from "../helpers";
+import { constants } from "../constants";
 import privateInfo from "../privateInfo";
+
+const { DISK_COLORS } = constants;
 
 const styles = {
   root: {
@@ -19,6 +24,13 @@ const styles = {
   },
   content: {
     marginBottom: 20
+  },
+  table: {
+    width: "fit-content",
+    maxHeight: 400
+  },
+  highlighted: {
+    background: "rgba(0, 0, 0, 0.04)"
   },
   error: {
     color: "#f44336"
@@ -41,9 +53,30 @@ class Leaderboard extends React.Component {
         if (Array.isArray(response)) {
           this.setState({
             fetching: false,
-            highScores: response.sort(
-              ({ numDisks: numDisks1 }, { numDisks: numDisks2 }) =>
-                numDisks1 - numDisks2
+            highScores: this.takeFive(
+              response.sort(
+                (
+                  {
+                    _id: _id1,
+                    numDisks: numDisks1,
+                    time: time1,
+                    timeStamp: timeStamp1
+                  },
+                  {
+                    _id: _id2,
+                    numDisks: numDisks2,
+                    time: time2,
+                    timeStamp: timeStamp2
+                  }
+                ) =>
+                  numDisks1 !== numDisks2
+                    ? numDisks1 - numDisks2
+                    : time1 !== time2
+                    ? time1 - time2
+                    : timeStamp1 !== timeStamp2
+                    ? moment(timeStamp1).isBefore(moment(timeStamp2))
+                    : _id1 < _id2
+              )
             )
           });
         } else {
@@ -53,6 +86,19 @@ class Leaderboard extends React.Component {
       })
       .catch(error => console.log("Unable to connect to API.", error));
   }
+
+  takeFive = highScores => {
+    const truncated = [];
+    get1ToN(DISK_COLORS.length).forEach(numDisks => {
+      const filtered = highScores.filter(
+        highScore => highScore.numDisks === numDisks
+      );
+      if (filtered.length) {
+        truncated.push(...take(filtered, 5));
+      }
+    });
+    return truncated;
+  };
 
   render() {
     const { classes, onClose } = this.props;
@@ -64,31 +110,38 @@ class Leaderboard extends React.Component {
           {fetching ? (
             <CircularProgress />
           ) : highScores.length ? (
-            <Table size='small'>
-              <TableHead>
-                <TableRow>
-                  <TableCell>No. Disks</TableCell>
-                  <TableCell align='right'>Name</TableCell>
-                  <TableCell align='right'>Time</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {highScores.map(highScore => {
-                  const { time } = highScore;
-                  return (
-                    <TableRow key={highScore.numDisks}>
-                      <TableCell component='th' scope='row'>
-                        {highScore.numDisks}
-                      </TableCell>
-                      <TableCell align='right'>{highScore.name}</TableCell>
-                      <TableCell align='right'>{formatTime(time)}</TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
+            <TableContainer className={classes.table}>
+              <Table stickyHeader size='small'>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>No. Disks</TableCell>
+                    <TableCell align='right'>Name</TableCell>
+                    <TableCell align='right'>Time</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {highScores.map(highScore => {
+                    const { _id, numDisks, name, time } = highScore;
+                    return (
+                      <TableRow
+                        key={_id}
+                        className={
+                          numDisks % 2 === 1 ? classes.highlighted : ""
+                        }
+                      >
+                        <TableCell component='th' scope='row'>
+                          {numDisks}
+                        </TableCell>
+                        <TableCell align='right'>{name}</TableCell>
+                        <TableCell align='right'>{formatTime(time)}</TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </TableContainer>
           ) : (
-            !showError && "There are no high scores for now."
+            !showError && "There is no best time for now."
           )}
 
           {showError && (

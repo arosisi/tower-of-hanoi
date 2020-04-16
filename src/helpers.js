@@ -10,6 +10,13 @@ export const formatTime = millisecs => {
   );
 };
 
+export const take = (array, n) => {
+  if (array.length <= n) {
+    return array;
+  }
+  return array.slice(0, n);
+};
+
 export const get1ToN = n => {
   const result = [];
   for (let i = 1; i <= n; i++) {
