@@ -37,7 +37,7 @@ class Likes extends React.Component {
         if (Array.isArray(response)) {
           this.setState({ numLikes: response.length });
         } else {
-          console.log("Failed to fetch.");
+          console.log("Failed to fetch likes.");
         }
       })
       .catch(error => console.log("Unable to connect to API.", error));
@@ -58,7 +58,7 @@ class Likes extends React.Component {
         .then(response => response.json())
         .then(response => {
           if (!response._id) {
-            console.log("Failed to update.");
+            console.log("Failed to update likes.");
           }
         })
         .catch(error => console.log("Unable to connect to API.", error));

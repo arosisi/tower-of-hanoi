@@ -81,7 +81,7 @@ class Leaderboard extends React.Component {
           });
         } else {
           this.setState({ fetching: false, showError: true });
-          console.log("Failed to fetch.");
+          console.log("Failed to fetch high scores.");
         }
       })
       .catch(error => console.log("Unable to connect to API.", error));

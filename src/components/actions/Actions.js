@@ -9,6 +9,7 @@ import { withStyles } from "@material-ui/core/styles";
 
 import Info from "./Info";
 import ReportBug from "./ReportBug";
+import Share from "./Share";
 
 const styles = {
   actions: {
@@ -19,11 +20,16 @@ const styles = {
 };
 
 class Actions extends React.Component {
-  state = { open: false, showInfo: false, showReportBug: false };
+  state = {
+    open: false,
+    showShare: false,
+    showInfo: false,
+    showReportBug: false
+  };
 
   render() {
     const { classes, windowWidth, show } = this.props;
-    const { open, showInfo, showReportBug } = this.state;
+    const { open, showShare, showInfo, showReportBug } = this.state;
     return (
       <div>
         <SpeedDial
@@ -39,7 +45,7 @@ class Actions extends React.Component {
             icon={<ShareIcon />}
             tooltipTitle={"Share"}
             tooltipPlacement='right'
-            onClick={() => this.setState({ open: false })}
+            onClick={() => this.setState({ open: false, showShare: true })}
           />
           <SpeedDialAction
             icon={<InfoIcon />}
@@ -61,6 +67,9 @@ class Actions extends React.Component {
           />
         </SpeedDial>
 
+        {showShare && (
+          <Share onClose={() => this.setState({ showShare: false })} />
+        )}
         {showInfo && (
           <Info onClose={() => this.setState({ showInfo: false })} />
         )}

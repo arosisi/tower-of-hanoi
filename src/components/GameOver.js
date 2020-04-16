@@ -70,7 +70,7 @@ class GameOver extends React.Component {
           });
         } else {
           this.setState({ fetching: false });
-          console.log("Failed to fetch.");
+          console.log("Failed to fetch high scores.");
         }
       })
       .catch(error => console.log("Unable to connect to API.", error));
@@ -154,7 +154,7 @@ class GameOver extends React.Component {
             onSubmit();
           } else {
             this.setState({ submitting: false, showError: true });
-            console.log("Failed to update.");
+            console.log("Failed to update high scores.");
           }
         })
         .catch(error => console.log("Unable to connect to API.", error));
