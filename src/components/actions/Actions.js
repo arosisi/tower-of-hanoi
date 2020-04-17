@@ -45,7 +45,10 @@ class Actions extends React.Component {
             icon={<ShareIcon />}
             tooltipTitle={"Share"}
             tooltipPlacement='right'
-            onClick={() => this.setState({ open: false, showShare: true })}
+            onClick={() => {
+              show();
+              this.setState({ open: false, showShare: true });
+            }}
           />
           <SpeedDialAction
             icon={<InfoIcon />}
