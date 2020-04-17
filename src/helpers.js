@@ -31,7 +31,7 @@ export const getUpToSecondLast = array => array.slice(0, array.length - 1);
 
 export const getMeasurements = size => {
   const { BASE_WIDTH, BASE_HEIGHT } = constants;
-  const multiplier = size * 0.4 + 0.6;
+  const multiplier = size * 0.3 + 0.7;
   return [Math.ceil(BASE_WIDTH * multiplier), BASE_HEIGHT];
 };
 

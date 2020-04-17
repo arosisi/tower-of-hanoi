@@ -19,7 +19,7 @@ import {
 } from "../helpers";
 import { constants } from "../constants";
 
-const { DISK_COLORS } = constants;
+const { GROUND_HEIGHT, DISK_COLORS } = constants;
 
 const styles = {
   controlButtons: {
@@ -119,7 +119,7 @@ class Controller extends React.Component {
 
   getY = (col, size) => {
     const { windowHeight } = this.props;
-    const divHeight = windowHeight - 150;
+    const divHeight = windowHeight - GROUND_HEIGHT;
     const diskHeight = getMeasurements(size)[1];
     let y = divHeight - diskHeight;
     let i = 0;

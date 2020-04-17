@@ -18,7 +18,6 @@ import { withStyles } from "@material-ui/core/styles";
 
 const styles = {
   content: {
-    marginTop: -20,
     marginBottom: 20,
     "& > *": {
       marginRight: 5

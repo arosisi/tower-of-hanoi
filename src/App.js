@@ -5,19 +5,19 @@ import Controller from "./components/Controller";
 import Initializer from "./components/Initializer";
 import { constants } from "./constants";
 
-const { DIV_COLORS } = constants;
+const { BASE_HEIGHT, CONSOLE_HEIGHT, GROUND_HEIGHT } = constants;
 
 const styles = {
-  overground: {
-    position: "relative",
-    display: "flex",
-    userSelect: "none"
-  },
-  game: {
+  console: {
     position: "absolute",
     left: 0,
     right: 0,
     textAlign: "center"
+  },
+  columns: {
+    position: "relative",
+    display: "flex",
+    userSelect: "none"
   }
 };
 
@@ -53,34 +53,14 @@ class App extends React.Component {
   render() {
     const { classes } = this.props;
     const { windowWidth, windowHeight, initializing, numDisks } = this.state;
-    const divWidth = windowWidth / 3;
-    const divHeight = windowHeight - 150;
+    const colWidth = windowWidth / 3;
+    const colHeight = numDisks ? numDisks * BASE_HEIGHT : 0;
+    const bufferHeight =
+      windowHeight - CONSOLE_HEIGHT - GROUND_HEIGHT - colHeight;
     return (
       <div>
-        <div className={classes.overground}>
-          <div
-            style={{
-              width: divWidth,
-              height: divHeight,
-              background: DIV_COLORS[0]
-            }}
-          />
-          <div
-            style={{
-              width: divWidth,
-              height: divHeight,
-              background: DIV_COLORS[1]
-            }}
-          />
-          <div
-            style={{
-              width: divWidth,
-              height: divHeight,
-              background: DIV_COLORS[2]
-            }}
-          />
-
-          <div className={classes.game}>
+        <div style={{ width: windowWidth, height: CONSOLE_HEIGHT }}>
+          <div className={classes.console}>
             {initializing ? (
               <Initializer
                 setNumDisks={numDisks =>
@@ -92,17 +72,44 @@ class App extends React.Component {
                 numDisks={numDisks}
                 windowWidth={windowWidth}
                 windowHeight={windowHeight}
-                restart={() => this.setState({ initializing: true })}
+                restart={() =>
+                  this.setState({ initializing: true, numDisks: null })
+                }
               />
             )}
           </div>
         </div>
 
+        <div style={{ width: windowWidth, height: bufferHeight }} />
+
+        <div className={classes.columns}>
+          <div
+            style={{
+              width: colWidth,
+              height: colHeight,
+              borderRight: "5px solid #cde4ef"
+            }}
+          />
+          <div
+            style={{
+              width: colWidth,
+              height: colHeight,
+              borderRight: "5px solid #cde4ef"
+            }}
+          />
+          <div
+            style={{
+              width: colWidth,
+              height: colHeight
+            }}
+          />
+        </div>
+
         <div
           style={{
             width: windowWidth,
-            height: 150,
-            background: "gainsboro"
+            height: GROUND_HEIGHT,
+            background: "#cde4ef"
           }}
         />
       </div>
