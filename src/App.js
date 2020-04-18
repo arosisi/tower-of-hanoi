@@ -5,7 +5,7 @@ import Controller from "./components/Controller";
 import Initializer from "./components/Initializer";
 import { constants } from "./constants";
 
-const { BASE_HEIGHT, CONSOLE_HEIGHT, GROUND_HEIGHT } = constants;
+const { BASE_HEIGHT, GROUND_HEIGHT } = constants;
 
 const styles = {
   console: {
@@ -75,31 +75,28 @@ class App extends React.Component {
     const { windowWidth, windowHeight, initializing, numDisks } = this.state;
     const colWidth = windowWidth / 3;
     const colHeight = numDisks ? numDisks * BASE_HEIGHT : 0;
-    const bufferHeight =
-      windowHeight - CONSOLE_HEIGHT - GROUND_HEIGHT - colHeight;
+    const bufferHeight = windowHeight - colHeight - GROUND_HEIGHT;
     return (
       <div>
-        <div style={{ width: windowWidth, height: CONSOLE_HEIGHT }}>
-          <div className={classes.console}>
-            {initializing ? (
-              <Initializer
-                setNumDisks={numDisks =>
-                  this.setState({ initializing: false, numDisks })
-                }
-              />
-            ) : (
-              <Controller
-                numDisks={numDisks}
-                windowWidth={windowWidth}
-                windowHeight={windowHeight}
-                enableScroll={this.enableScroll}
-                disableTouchMove={this.disableTouchMove}
-                restart={() =>
-                  this.setState({ initializing: true, numDisks: null })
-                }
-              />
-            )}
-          </div>
+        <div className={classes.console}>
+          {initializing ? (
+            <Initializer
+              setNumDisks={numDisks =>
+                this.setState({ initializing: false, numDisks })
+              }
+            />
+          ) : (
+            <Controller
+              numDisks={numDisks}
+              windowWidth={windowWidth}
+              windowHeight={windowHeight}
+              enableScroll={this.enableScroll}
+              disableTouchMove={this.disableTouchMove}
+              restart={() =>
+                this.setState({ initializing: true, numDisks: null })
+              }
+            />
+          )}
         </div>
 
         <div style={{ width: windowWidth, height: bufferHeight }} />

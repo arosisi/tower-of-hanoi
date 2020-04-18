@@ -1,7 +1,6 @@
 export const constants = {
   BASE_WIDTH: 50,
   BASE_HEIGHT: 20,
-  CONSOLE_HEIGHT: 300,
   GROUND_HEIGHT: 150,
   DISK_COLORS: [
     "#448098",
