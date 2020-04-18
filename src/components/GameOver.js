@@ -40,7 +40,9 @@ class GameOver extends React.Component {
   };
 
   componentDidMount() {
-    const { numDisks } = this.props;
+    const { numDisks, enableScroll } = this.props;
+    enableScroll();
+
     fetch(privateInfo.high_score_api_endpoint, {
       headers: {
         "content-type": "application/json",

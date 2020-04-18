@@ -196,6 +196,8 @@ class Controller extends React.Component {
       numDisks,
       windowWidth,
       windowHeight,
+      enableScroll,
+      disableTouchMove,
       restart
     } = this.props;
     const {
@@ -213,7 +215,12 @@ class Controller extends React.Component {
     const isGameOver = this.isGameOver();
     return (
       <div>
-        <Actions windowWidth={windowWidth} show={this.show} />
+        <Actions
+          windowWidth={windowWidth}
+          enableScroll={enableScroll}
+          disableTouchMove={disableTouchMove}
+          show={this.show}
+        />
 
         <Likes />
 
@@ -234,7 +241,12 @@ class Controller extends React.Component {
         </div>
 
         <div className={classes.leaderboardButton}>
-          <Button onClick={() => this.show({ showLeaderboard: true })}>
+          <Button
+            onClick={() => {
+              enableScroll();
+              this.show({ showLeaderboard: true });
+            }}
+          >
             Leaderboard
           </Button>
         </div>
@@ -251,7 +263,10 @@ class Controller extends React.Component {
 
         {showLeaderboard && (
           <Leaderboard
-            onClose={() => this.setState({ showLeaderboard: false })}
+            onClose={() => {
+              disableTouchMove();
+              this.setState({ showLeaderboard: false });
+            }}
           />
         )}
 
@@ -260,7 +275,11 @@ class Controller extends React.Component {
             numDisks={numDisks}
             time={time}
             timeStamp={timeStamp}
-            onClose={() => this.setState({ showGameOver: false })}
+            enableScroll={enableScroll}
+            onClose={() => {
+              disableTouchMove();
+              this.setState({ showGameOver: false });
+            }}
             onSubmit={() =>
               this.setState({ hasSubmitted: true, showSubmissionSuccess: true })
             }

@@ -28,7 +28,13 @@ class Actions extends React.Component {
   };
 
   render() {
-    const { classes, windowWidth, show } = this.props;
+    const {
+      classes,
+      windowWidth,
+      enableScroll,
+      disableTouchMove,
+      show
+    } = this.props;
     const { open, showShare, showInfo, showReportBug } = this.state;
     return (
       <div>
@@ -64,6 +70,7 @@ class Actions extends React.Component {
             tooltipTitle={"Report Bug"}
             tooltipPlacement='right'
             onClick={() => {
+              enableScroll();
               show();
               this.setState({ open: false, showReportBug: true });
             }}
@@ -79,7 +86,10 @@ class Actions extends React.Component {
         {showReportBug && (
           <ReportBug
             windowWidth={windowWidth}
-            onClose={() => this.setState({ showReportBug: false })}
+            onClose={() => {
+              disableTouchMove();
+              this.setState({ showReportBug: false });
+            }}
           />
         )}
       </div>

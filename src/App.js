@@ -30,17 +30,7 @@ class App extends React.Component {
   };
 
   componentDidMount() {
-    if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-      window.addEventListener(
-        "touchmove",
-        event => {
-          if (event.scale > 1) {
-            event.preventDefault();
-          }
-        },
-        { passive: false }
-      );
-    }
+    this.disableTouchMove();
 
     window.addEventListener("resize", ({ target }) =>
       this.setState({
@@ -49,6 +39,36 @@ class App extends React.Component {
       })
     );
   }
+
+  enableScroll = () => {
+    if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+      window.removeEventListener("touchmove", this.preventDefault, {
+        passive: false
+      });
+      window.addEventListener("touchmove", this.preventZoom, {
+        passive: false
+      });
+    }
+  };
+
+  disableTouchMove = () => {
+    if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+      window.removeEventListener("touchmove", this.preventZoom, {
+        passive: false
+      });
+      window.addEventListener("touchmove", this.preventDefault, {
+        passive: false
+      });
+    }
+  };
+
+  preventDefault = event => event.preventDefault();
+
+  preventZoom = event => {
+    if (event.scale > 1) {
+      event.preventDefault();
+    }
+  };
 
   render() {
     const { classes } = this.props;
@@ -72,6 +92,8 @@ class App extends React.Component {
                 numDisks={numDisks}
                 windowWidth={windowWidth}
                 windowHeight={windowHeight}
+                enableScroll={this.enableScroll}
+                disableTouchMove={this.disableTouchMove}
                 restart={() =>
                   this.setState({ initializing: true, numDisks: null })
                 }
