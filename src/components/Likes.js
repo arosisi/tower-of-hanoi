@@ -22,7 +22,13 @@ const styles = {
 };
 
 class Likes extends React.Component {
-  state = { numLikes: null, timeStamp: null };
+  state = {
+    timeStamp: moment(),
+    numLikes: null,
+    updatingLikes: false,
+    liked: false,
+    likeId: null
+  };
 
   componentDidMount() {
     fetch(privateInfo.like_api_endpoint, {
@@ -43,9 +49,12 @@ class Likes extends React.Component {
       .catch(error => console.log("Unable to connect to API.", error));
   }
 
-  componentWillUnmount() {
-    const { timeStamp } = this.state;
-    if (timeStamp) {
+  updateLikes = () => {
+    const { timeStamp, numLikes, liked } = this.state;
+
+    this.setState({ updatingLikes: true });
+
+    if (!liked) {
       fetch(privateInfo.like_api_endpoint, {
         method: "POST",
         headers: {
@@ -57,31 +66,56 @@ class Likes extends React.Component {
       })
         .then(response => response.json())
         .then(response => {
-          if (!response._id) {
-            console.log("Failed to update likes.");
+          if (response._id) {
+            this.setState({
+              numLikes: numLikes + 1,
+              updatingLikes: false,
+              liked: true,
+              likeId: response._id
+            });
+          } else {
+            console.log("Failed to add like.");
+          }
+        })
+        .catch(error => console.log("Unable to connect to API.", error));
+    } else {
+      fetch(`${privateInfo.like_api_endpoint}/${this.state.likeId}`, {
+        method: "DELETE",
+        headers: {
+          "content-type": "application/json",
+          "x-apikey": privateInfo.like_api_key,
+          "cache-control": "no-cache"
+        }
+      })
+        .then(response => response.json())
+        .then(({ result }) => {
+          if (Array.isArray(result) && result.length) {
+            this.setState({
+              numLikes: numLikes - 1,
+              updatingLikes: false,
+              liked: false,
+              likeId: null
+            });
+          } else {
+            console.log("Failed to remove like.");
           }
         })
         .catch(error => console.log("Unable to connect to API.", error));
     }
-  }
+  };
 
   render() {
     const { classes } = this.props;
-    const { numLikes, timeStamp } = this.state;
+    const { numLikes, updatingLikes, liked } = this.state;
     return (
       <div className={classes.root}>
         {numLikes !== null ? (
           <div className={classes.counter}>
-            {numLikes + !!timeStamp}
-            <IconButton
-              size='small'
-              onClick={() =>
-                this.setState({
-                  timeStamp: !timeStamp ? moment() : null
-                })
-              }
-            >
-              {timeStamp ? (
+            {numLikes}
+            <IconButton size='small' onClick={this.updateLikes}>
+              {updatingLikes ? (
+                <CircularProgress color='secondary' size={20} />
+              ) : liked ? (
                 <LikedIcon color='secondary' fontSize='small' />
               ) : (
                 <UnlikedIcon color='secondary' fontSize='small' />
