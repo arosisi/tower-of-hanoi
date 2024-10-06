@@ -23,7 +23,8 @@ const styles = {
 
 class App extends React.Component {
   state = {
-    windowWidth: window.innerWidth,
+    fullWindowWidth: window.innerWidth,
+    windowWidth: window.innerWidth > 750 ? 750 : window.innerWidth,
     windowHeight: window.innerHeight,
     initializing: true,
     numDisks: null
@@ -34,7 +35,8 @@ class App extends React.Component {
 
     window.addEventListener("resize", ({ target }) =>
       this.setState({
-        windowWidth: target.innerWidth,
+        fullWindowWidth: target.innerWidth,
+        windowWidth: target.innerWidth > 750 ? 750 : target.innerWidth,
         windowHeight: target.innerHeight
       })
     );
@@ -72,7 +74,13 @@ class App extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { windowWidth, windowHeight, initializing, numDisks } = this.state;
+    const {
+      fullWindowWidth,
+      windowWidth,
+      windowHeight,
+      initializing,
+      numDisks
+    } = this.state;
     const colWidth = windowWidth / 3;
     const colHeight = numDisks ? numDisks * BASE_HEIGHT : 0;
     const bufferHeight = windowHeight - colHeight - GROUND_HEIGHT;
@@ -88,6 +96,7 @@ class App extends React.Component {
           ) : (
             <Controller
               numDisks={numDisks}
+              fullWindowWidth={fullWindowWidth}
               windowWidth={windowWidth}
               windowHeight={windowHeight}
               enableScroll={this.enableScroll}
@@ -104,21 +113,21 @@ class App extends React.Component {
         <div className={classes.columns}>
           <div
             style={{
-              width: colWidth,
+              width: colWidth - 2.5,
               height: colHeight,
               borderRight: "5px solid #cde4ef"
             }}
           />
           <div
             style={{
-              width: colWidth,
+              width: colWidth - 5,
               height: colHeight,
               borderRight: "5px solid #cde4ef"
             }}
           />
           <div
             style={{
-              width: colWidth,
+              width: colWidth - 2.5,
               height: colHeight
             }}
           />

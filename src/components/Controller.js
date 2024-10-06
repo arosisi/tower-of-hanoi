@@ -194,6 +194,7 @@ class Controller extends React.Component {
     const {
       classes,
       numDisks,
+      fullWindowWidth,
       windowWidth,
       windowHeight,
       enableScroll,
@@ -310,6 +311,7 @@ class Controller extends React.Component {
             endMove={() => this.setState({ movingDisk: null })}
             size={size}
             color={DISK_COLORS[size - 1]}
+            fullWindowWidth={fullWindowWidth}
             windowWidth={windowWidth}
             windowHeight={windowHeight}
             divWidth={divWidth}

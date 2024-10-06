@@ -14,6 +14,7 @@ function Disk(props) {
     endMove,
     size,
     color,
+    fullWindowWidth,
     windowWidth,
     windowHeight,
     divWidth,
@@ -47,6 +48,14 @@ function Disk(props) {
 
   const myRef = React.useRef(null);
 
+  // setting max width and centering game shifts x to the right, so correction needed
+  const correctX = (x) => {
+    if (fullWindowWidth > windowWidth) {
+      return x - (fullWindowWidth - windowWidth) / 2;
+    }
+    return x;
+  }
+
   const bind = useGesture(
     {
       onDragStart: ({ event }) => {
@@ -59,11 +68,14 @@ function Disk(props) {
           }
         }
       },
-      onDrag: ({ event, xy: [x, y] }) => {
+      onDrag: ({ event, xy: [rawX, y] }) => {
         event.preventDefault();
+        const x = correctX(rawX);
         if (active) {
           const effectiveX =
-            x > windowWidth - width / 2 ? windowWidth - width / 2 : x;
+            x > windowWidth - width / 2
+              ? windowWidth - width / 2
+              : x < width / 2 ? width / 2 : x;
           const effectiveY =
             y > windowHeight - height ? windowHeight - height : y;
           setPosition({
@@ -75,8 +87,9 @@ function Disk(props) {
           }
         }
       },
-      onDragEnd: ({ event, xy: [x, y] }) => {
+      onDragEnd: ({ event, xy: [rawX, y] }) => {
         event.preventDefault();
+        const x = correctX(rawX);
         if (active) {
           const colNum = x <= divWidth ? 1 : x <= 2 * divWidth ? 2 : 3;
           endDrag();
