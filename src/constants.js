@@ -9,7 +9,7 @@ export const constants = {
     "#d7bc3e",
     "#2faa77",
     "#e37e8c",
-    "#57a9d4",
-    "#a08986"
+    // "#57a9d4",
+    // "#a08986"
   ]
 };

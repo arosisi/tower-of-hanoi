@@ -38,16 +38,11 @@ export const getMeasurements = size => {
 // Calculate padding to ensure adequate touch target size
 export const calculatePadding = (width, height) => {
   // Base padding for comfortable interaction
-  const basePadding = 12;
-  
-  // Ensure minimum touch target of 44px for accessibility
-  const minTouchTarget = 44;
-  const widthPadding = Math.max(basePadding, (minTouchTarget - width) / 2);
-  const heightPadding = Math.max(basePadding, (minTouchTarget - height) / 2);
+  const basePadding = 24;
   
   return {
-    horizontal: Math.max(widthPadding, 0),
-    vertical: Math.max(heightPadding, 0)
+    horizontal: basePadding,
+    vertical: basePadding
   };
 };
 
