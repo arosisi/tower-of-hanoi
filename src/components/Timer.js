@@ -60,7 +60,7 @@ class Timer extends React.Component {
           {formatTime(millisecs)}
         </div>
         {disabled && (
-          <div className={classes.warning}>Time is now invalid</div>
+          <div className={classes.warning}>Time is now invalid.</div>
         )}
       </div>
     );
