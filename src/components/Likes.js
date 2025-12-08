@@ -6,7 +6,7 @@ import UnlikedIcon from "@mui/icons-material/FavoriteBorder";
 import moment from "moment";
 import { withStyles } from "@mui/styles";
 
-import privateInfo from "../privateInfo";
+import config from "../config";
 
 const styles = {
   root: {
@@ -31,10 +31,10 @@ class Likes extends React.Component {
   };
 
   componentDidMount() {
-    fetch(privateInfo.like_api_endpoint, {
+    fetch(config.like_api_endpoint, {
       headers: {
         "content-type": "application/json",
-        "x-apikey": privateInfo.like_api_key,
+        "x-apikey": config.like_api_key,
         "cache-control": "no-cache"
       }
     })
@@ -55,11 +55,11 @@ class Likes extends React.Component {
     this.setState({ updatingLikes: true });
 
     if (!liked) {
-      fetch(privateInfo.like_api_endpoint, {
+      fetch(config.like_api_endpoint, {
         method: "POST",
         headers: {
           "content-type": "application/json",
-          "x-apikey": privateInfo.like_api_key,
+          "x-apikey": config.like_api_key,
           "cache-control": "no-cache"
         },
         body: JSON.stringify({ timeStamp })
@@ -79,11 +79,11 @@ class Likes extends React.Component {
         })
         .catch(error => console.log("Unable to connect to API.", error));
     } else {
-      fetch(`${privateInfo.like_api_endpoint}/${this.state.likeId}`, {
+      fetch(`${config.like_api_endpoint}/${this.state.likeId}`, {
         method: "DELETE",
         headers: {
           "content-type": "application/json",
-          "x-apikey": privateInfo.like_api_key,
+          "x-apikey": config.like_api_key,
           "cache-control": "no-cache"
         }
       })

@@ -1,0 +1,8 @@
+{
+  "high_score_api_endpoint": "YOUR_HIGH_SCORE_API_ENDPOINT",
+  "high_score_api_key": "YOUR_HIGH_SCORE_API_KEY",
+  "like_api_endpoint": "YOUR_LIKE_API_ENDPOINT",
+  "like_api_key": "YOUR_LIKE_API_KEY",
+  "form_endpoint": "YOUR_FORM_ENDPOINT",
+  "captcha_sitekey": "YOUR_CAPTCHA_SITEKEY"
+}

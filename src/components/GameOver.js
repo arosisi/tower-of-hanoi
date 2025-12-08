@@ -10,7 +10,7 @@ import { Formik } from "formik";
 import { withStyles } from "@mui/styles";
 
 import { formatTime } from "../helpers";
-import privateInfo from "../privateInfo";
+import config from "../config";
 
 const styles = {
   root: {
@@ -43,10 +43,10 @@ class GameOver extends React.Component {
     const { numDisks, enableScroll } = this.props;
     enableScroll();
 
-    fetch(privateInfo.high_score_api_endpoint, {
+    fetch(config.high_score_api_endpoint, {
       headers: {
         "content-type": "application/json",
-        "x-apikey": privateInfo.high_score_api_key,
+        "x-apikey": config.high_score_api_key,
         "cache-control": "no-cache"
       }
     })
@@ -133,11 +133,11 @@ class GameOver extends React.Component {
   handleSubmit = ({ name }) => {
     const { numDisks, time, timeStamp, onSubmit } = this.props;
     this.setState({ submitting: true }, () => {
-      fetch(privateInfo.high_score_api_endpoint, {
+      fetch(config.high_score_api_endpoint, {
         method: "POST",
         headers: {
           "content-type": "application/json",
-          "x-apikey": privateInfo.high_score_api_key,
+          "x-apikey": config.high_score_api_key,
           "cache-control": "no-cache"
         },
         body: JSON.stringify({

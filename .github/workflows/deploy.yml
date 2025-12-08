@@ -33,6 +33,13 @@ jobs:
         run: npm ci
       
       - name: Build
+        env:
+          REACT_APP_HIGH_SCORE_API_ENDPOINT: ${{ secrets.HIGH_SCORE_API_ENDPOINT }}
+          REACT_APP_HIGH_SCORE_API_KEY: ${{ secrets.HIGH_SCORE_API_KEY }}
+          REACT_APP_LIKE_API_ENDPOINT: ${{ secrets.LIKE_API_ENDPOINT }}
+          REACT_APP_LIKE_API_KEY: ${{ secrets.LIKE_API_KEY }}
+          REACT_APP_FORM_ENDPOINT: ${{ secrets.FORM_ENDPOINT }}
+          REACT_APP_CAPTCHA_SITEKEY: ${{ secrets.CAPTCHA_SITEKEY }}
         run: npm run build
       
       - name: Upload artifact

@@ -9,7 +9,7 @@ import TextField from "@mui/material/TextField";
 import { Formik } from "formik";
 import { withStyles } from "@mui/styles";
 
-import privateInfo from "../../privateInfo";
+import config from "../../config";
 
 const styles = {
   content: {
@@ -81,7 +81,7 @@ class ReportBug extends React.Component {
                 noValidate
                 autoComplete='off'
                 onSubmit={handleSubmit}
-                action={privateInfo.form_endpoint}
+                action={config.form_endpoint}
                 method='POST'
               >
                 {/* Hack to prevent Description label from being clipped when text field focused */}
@@ -110,7 +110,7 @@ class ReportBug extends React.Component {
                       ? { opacity: 0.65, pointerEvents: "none" }
                       : null)
                   }}
-                  sitekey={privateInfo.captcha_sitekey}
+                  sitekey={config.captcha_sitekey}
                   onChange={() => this.setState({ verified: true })}
                   onExpired={() => this.setState({ verified: false })}
                 />

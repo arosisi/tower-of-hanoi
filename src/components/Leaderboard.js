@@ -14,7 +14,7 @@ import { withStyles } from "@mui/styles";
 
 import { get1ToN, take, formatTime } from "../helpers";
 import { constants } from "../constants";
-import privateInfo from "../privateInfo";
+import config from "../config";
 
 const { DISK_COLORS } = constants;
 
@@ -41,10 +41,10 @@ class Leaderboard extends React.Component {
   state = { fetching: true, highScores: [], showError: false };
 
   componentDidMount() {
-    fetch(privateInfo.high_score_api_endpoint, {
+    fetch(config.high_score_api_endpoint, {
       headers: {
         "content-type": "application/json",
-        "x-apikey": privateInfo.high_score_api_key,
+        "x-apikey": config.high_score_api_key,
         "cache-control": "no-cache"
       }
     })
