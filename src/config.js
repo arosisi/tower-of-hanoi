@@ -1,23 +1,14 @@
-// Configuration that uses environment variables in production (GitHub Actions)
-// and falls back to privateInfo.json for local development
-
-let privateInfo = {};
-
-try {
-  // Try to import privateInfo.json for local development
-  privateInfo = require('./privateInfo.json');
-} catch (e) {
-  // File doesn't exist (e.g., in CI/CD), use empty object
-  privateInfo = {};
-}
+// Configuration that uses environment variables
+// For local development: values come from .env.local
+// For GitHub Actions: values come from repository secrets
 
 const config = {
-  high_score_api_endpoint: process.env.REACT_APP_HIGH_SCORE_API_ENDPOINT || privateInfo.high_score_api_endpoint,
-  high_score_api_key: process.env.REACT_APP_HIGH_SCORE_API_KEY || privateInfo.high_score_api_key,
-  like_api_endpoint: process.env.REACT_APP_LIKE_API_ENDPOINT || privateInfo.like_api_endpoint,
-  like_api_key: process.env.REACT_APP_LIKE_API_KEY || privateInfo.like_api_key,
-  form_endpoint: process.env.REACT_APP_FORM_ENDPOINT || privateInfo.form_endpoint,
-  captcha_sitekey: process.env.REACT_APP_CAPTCHA_SITEKEY || privateInfo.captcha_sitekey
+  high_score_api_endpoint: process.env.REACT_APP_HIGH_SCORE_API_ENDPOINT || '',
+  high_score_api_key: process.env.REACT_APP_HIGH_SCORE_API_KEY || '',
+  like_api_endpoint: process.env.REACT_APP_LIKE_API_ENDPOINT || '',
+  like_api_key: process.env.REACT_APP_LIKE_API_KEY || '',
+  form_endpoint: process.env.REACT_APP_FORM_ENDPOINT || '',
+  captcha_sitekey: process.env.REACT_APP_CAPTCHA_SITEKEY || ''
 };
 
 export default config;
