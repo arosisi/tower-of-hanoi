@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useSpring, animated } from "react-spring";
-import { useGesture } from "react-use-gesture";
+import { useEffect, useState } from "react";
+import { useSpring, animated } from "@react-spring/web";
+import { useGesture } from "@use-gesture/react";
 
 import { getMeasurements, calculatePadding } from "../helpers";
 
@@ -43,7 +43,7 @@ function Disk(props) {
   const [zIndex, setZIndex] = useState(baseZIndex);
 
   // spring to smoothen drag
-  const [{ x, y }, setPosition] = useSpring(
+  const [{ x, y }, api] = useSpring(
     () => ({
       x: xy[0] - padding.horizontal,
       y: xy[1] - padding.vertical,
@@ -56,10 +56,8 @@ function Disk(props) {
 
   // move disks via props.xy
   useEffect(() => {
-    setPosition({ x: props.xy[0] - padding.horizontal, y: props.xy[1] - padding.vertical });
-  }, [setPosition, props.xy, padding.horizontal, padding.vertical]);
-
-  const myRef = React.useRef(null);
+    api.start({ x: props.xy[0] - padding.horizontal, y: props.xy[1] - padding.vertical });
+  }, [api, props.xy, padding.horizontal, padding.vertical]);
 
   // setting max width and centering game shifts x to the right, so correction needed
   const correctX = (x) => {
@@ -93,7 +91,7 @@ function Disk(props) {
           const effectiveY =
             y > windowHeight - height ? windowHeight - height : y;
           // Adjust container position to account for padding offset
-          setPosition({
+          api.start({
             x: effectiveX - width / 2 - padding.horizontal,
             y: effectiveY - height / 2 - padding.vertical
           });
@@ -115,16 +113,14 @@ function Disk(props) {
       }
     },
     {
-      domTarget: myRef,
-      eventOptions: { passive: false }
+      drag: {
+        filterTaps: true
+      }
     }
   );
 
-  React.useEffect(bind, [bind]);
-
   return (
     <animated.div
-      ref={myRef}
       {...bind()}
       style={{
         position: "absolute",
@@ -135,6 +131,7 @@ function Disk(props) {
         height: containerHeight,
         background: "transparent",
         cursor: active ? "grab" : "default",
+        touchAction: "none",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
