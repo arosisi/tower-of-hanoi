@@ -1,11 +1,14 @@
 import React from "react";
-import { withStyles } from "@material-ui/core/styles";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { withStyles } from "@mui/styles";
 
 import Controller from "./components/Controller";
 import Initializer from "./components/Initializer";
 import { constants } from "./constants";
 
 const { BASE_HEIGHT, GROUND_HEIGHT } = constants;
+
+const theme = createTheme();
 
 const styles = {
   console: {
@@ -85,7 +88,7 @@ class App extends React.Component {
     const colHeight = numDisks ? numDisks * BASE_HEIGHT : 0;
     const bufferHeight = windowHeight - colHeight - GROUND_HEIGHT;
     return (
-      <div>
+      <ThemeProvider theme={theme}>
         <div className={classes.console}>
           {initializing ? (
             <Initializer
@@ -140,7 +143,7 @@ class App extends React.Component {
             background: "#cde4ef"
           }}
         />
-      </div>
+      </ThemeProvider>
     );
   }
 }

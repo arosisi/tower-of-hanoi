@@ -1,6 +1,6 @@
 import React from "react";
 import moment from "moment";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles } from "@mui/styles";
 
 import { formatTime } from "../helpers";
 

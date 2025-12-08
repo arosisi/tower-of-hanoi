@@ -1,7 +1,7 @@
 import React from "react";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import { withStyles } from "@material-ui/core/styles";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import { withStyles } from "@mui/styles";
 
 import { get1ToN } from "../helpers";
 import { constants } from "../constants";

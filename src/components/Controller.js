@@ -1,8 +1,8 @@
 import React from "react";
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 import Confetti from "react-confetti";
-import Snackbar from "@material-ui/core/Snackbar";
-import { withStyles } from "@material-ui/core/styles";
+import Snackbar from "@mui/material/Snackbar";
+import { withStyles } from "@mui/styles";
 
 import Actions from "./actions/Actions";
 import Disk from "./Disk";

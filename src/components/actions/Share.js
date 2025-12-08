@@ -1,7 +1,7 @@
 import React from "react";
-import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
 import {
   FacebookIcon,
   FacebookShareButton,
@@ -14,7 +14,7 @@ import {
   RedditIcon,
   RedditShareButton
 } from "react-share";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles } from "@mui/styles";
 
 const styles = {
   content: {

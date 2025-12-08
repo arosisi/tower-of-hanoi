@@ -1,10 +1,10 @@
 import React from "react";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import IconButton from "@material-ui/core/IconButton";
-import LikedIcon from "@material-ui/icons/Favorite";
-import UnlikedIcon from "@material-ui/icons/FavoriteBorder";
+import CircularProgress from "@mui/material/CircularProgress";
+import IconButton from "@mui/material/IconButton";
+import LikedIcon from "@mui/icons-material/Favorite";
+import UnlikedIcon from "@mui/icons-material/FavoriteBorder";
 import moment from "moment";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles } from "@mui/styles";
 
 import privateInfo from "../privateInfo";
 

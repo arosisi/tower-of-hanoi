@@ -1,11 +1,11 @@
 import React from "react";
-import BugReportIcon from "@material-ui/icons/BugReportOutlined";
-import InfoIcon from "@material-ui/icons/InfoOutlined";
-import ShareIcon from "@material-ui/icons/Share";
-import SpeedDial from "@material-ui/lab/SpeedDial";
-import SpeedDialIcon from "@material-ui/lab/SpeedDialIcon";
-import SpeedDialAction from "@material-ui/lab/SpeedDialAction";
-import { withStyles } from "@material-ui/core/styles";
+import BugReportIcon from "@mui/icons-material/BugReportOutlined";
+import InfoIcon from "@mui/icons-material/InfoOutlined";
+import ShareIcon from "@mui/icons-material/Share";
+import SpeedDial from "@mui/material/SpeedDial";
+import SpeedDialIcon from "@mui/material/SpeedDialIcon";
+import SpeedDialAction from "@mui/material/SpeedDialAction";
+import { withStyles } from "@mui/styles";
 
 import Info from "./Info";
 import ReportBug from "./ReportBug";

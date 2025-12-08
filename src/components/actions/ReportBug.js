@@ -1,13 +1,13 @@
 import React from "react";
-import Button from "@material-ui/core/Button";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
+import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
 import ReCAPTCHA from "react-google-recaptcha";
-import TextField from "@material-ui/core/TextField";
+import TextField from "@mui/material/TextField";
 import { Formik } from "formik";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles } from "@mui/styles";
 
 import privateInfo from "../../privateInfo";
 
@@ -84,6 +84,8 @@ class ReportBug extends React.Component {
                 action={privateInfo.form_endpoint}
                 method='POST'
               >
+                {/* Hack to prevent Description label from being clipped when text field focused */}
+                <div style={{ height: 6 }}/>
                 <TextField
                   className={classes.description}
                   fullWidth
