@@ -322,6 +322,7 @@ class Controller extends React.Component {
                 this.setState({ isTiming: true });
               }
             }}
+            baseZIndex={numDisks - size + 1}
           />
         ))}
       </div>

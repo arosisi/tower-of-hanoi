@@ -35,6 +35,22 @@ export const getMeasurements = size => {
   return [Math.ceil(BASE_WIDTH * multiplier), BASE_HEIGHT];
 };
 
+// Calculate padding to ensure adequate touch target size
+export const calculatePadding = (width, height) => {
+  // Base padding for comfortable interaction
+  const basePadding = 12;
+  
+  // Ensure minimum touch target of 44px for accessibility
+  const minTouchTarget = 44;
+  const widthPadding = Math.max(basePadding, (minTouchTarget - width) / 2);
+  const heightPadding = Math.max(basePadding, (minTouchTarget - height) / 2);
+  
+  return {
+    horizontal: Math.max(widthPadding, 0),
+    vertical: Math.max(heightPadding, 0)
+  };
+};
+
 export const solve = (numDisks, initCol1, initCol2, initCol3) => {
   let col1 = [...initCol1];
   let col2 = [...initCol2];
