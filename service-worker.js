@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/tower-of-hanoi/precache-manifest.ee8dc4eddcf965db3b8ffd99c9f45c2d.js"
+  "/tower-of-hanoi/precache-manifest.449c39a2b066570c6a88b5b3c026b2f6.js"
 );
 
 self.addEventListener('message', (event) => {
