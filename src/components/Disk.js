@@ -151,7 +151,7 @@ function Disk(props) {
           alignItems: "center"
         }}
       >
-        <span>{size}</span>
+        <span style={{ userSelect: "none" }}>{size}</span>
       </div>
     </animated.div>
   );
